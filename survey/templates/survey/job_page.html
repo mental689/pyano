@@ -1,0 +1,73 @@
+{% extends 'survey/_base.html' %}
+{% load static %}
+{% block scripts %}
+<script src="{% static 'js/canvas.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<div id="surveyContent">
+    {% if dataType != 'pyano' %}
+    <video
+            id="videoplayer"
+            class="video-js vjs-default-skin"
+            width="720"
+            style="float: left;"
+            data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v={{ yid }}"}] }'
+            controls>
+    </video>
+    {% else %}
+    <video
+            id="videoplayer"
+            class="video-js vjs-default-skin"
+            width="720"
+            style="float: left;"
+            controls>
+        <source src="{{ source }}" type="video/mp4">
+    </video>
+    {% endif %}
+</div>
+<div id="panel" style="float:left; margin-left: 10px;">
+    <p><b>Thank you for joining our work!</b> <a href="{{ instruction_url }}">Please read the instructions here.</a> </p>
+</div>
+<div id="my-timeline"></div>
+{% if dataType != 'pyano' %}
+<input type="hidden" value="{{ yid }}" name="hidden1" id="hidden1">
+{% else %}
+<input type="hidden" value="{{ pid }}" name="hidden1" id="hidden1">
+{% endif %}
+<script src="http://players.brightcove.net/videojs-overlay/2/videojs-overlay.min.js"></script>
+<script type="text/javascript">
+    (function(window, videojs) {
+      var player = window.player = videojs('videoplayer',{
+        controls: true,
+        autoplay: true,
+        preload: 'auto',
+        plugins: {
+            framebyframe: {
+            fps: 23.98,
+            steps: [
+                { text: '-5', step: -5 },
+                { text: '-1', step: -1 },
+                { text: '+1', step: 1 },
+                { text: '+5', step: 5 },
+            ]
+        }
+      }
+    });
+    player.one('loadedmetadata', function() { console.log(player.duration()); });
+    var w = $("#videoplayer").width();
+    var h = $("#videoplayer").height();
+    player.overlay({
+        content: "Default overlay",
+        overlays: [{
+            align: "none",
+            content: '<canvas id="canvas" width="'+w+'" height="'+h+'"></canvas>',
+            start: 'play',
+            end: 'finish',
+            showBackground: false
+        }]
+    });
+    }(window, window.videojs));
+
+</script>
+{% endblock %}

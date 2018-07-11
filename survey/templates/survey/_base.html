@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" charset="UTF-8" content="text/html">
+    <meta name="viewport" content="width=device-width">
+    <title></title>
+
+    <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
+    <link href="{% static 'css/survey.css' %}" rel="stylesheet">
+    <link href="http://players.brightcove.net/videojs-overlay/2/videojs-overlay.css" rel='stylesheet'>
+    <script src="{% static 'js/d3.v5.min.js' %}"></script>
+    <script src="{% static 'js/d3-timelines.js' %}"></script>
+    <script src="{% static 'js/video.js' %}"></script>
+    <script src="{% static 'js/Youtube.js' %}"></script>
+    <script src="{% static 'js/videojs.framebyframe.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
+    <script src="{% static 'js/fabric.min.js' %}"></script>
+    <script src="{% static 'js/taffy.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>
