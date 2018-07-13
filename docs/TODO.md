@@ -2,14 +2,14 @@ Todo list
 =====
 
 - [ ] Basic GUI features
-    * [ ]
+    * [ ] Add annotation features.
 
 - [ ] Crowdsourcing features
     * [ ] Integration with MTurk.
 
 - [ ] Psychological management features
     * [ ] Workers' performance analysis.
-        * [ ] Timers to measure the processing time of workers.
+        * [x] Timers to measure the processing time of workers.
     * [ ] Intuitive reporting/visualization features.
         * [ ] Workers' progresses visualization.
         * [ ] Workers' evaluation system.

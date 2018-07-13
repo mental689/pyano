@@ -22,15 +22,15 @@ def job(request):
         return redirect(to="{}?next=/job/".format(settings.LOGIN_URL))
     # get current timestamp to measure the performance latter
     start = time.time()
-    yid = request.GET.get("yid")
-    if yid is not None:
+    id = request.GET.get("yid")
+    if id is not None:
         type = "youtube"
         source = ""
     else:
         type = "pyano"
-        vid = request.GET.get("vid")
+        id = request.GET.get("vid")
     template = loader.get_template('survey/job_page.html')
-    context = {"yid": yid, "type": type}
+    context = {"yid": id, "type": type}
     return HttpResponse(template.render(context, request))
 
 @csrf_protect
@@ -69,11 +69,13 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('')
+            return redirect('/')
     return render(request, "registration/register.html", {"form": form})
 
 
 def profile(request):
     if not request.user.is_authenticated:
         return redirect(to="{}?next=/profile".format(settings.LOGIN_URL))
-    return HttpResponse("Welcome to PYANO! {}".format(request.user))
+    template = loader.get_template("registration/profile.html")
+    context = {"message": "Welcome to PYANO! {}".format(request.user)}
+    return HttpResponse(template.render(context, request))

@@ -11,7 +11,9 @@
 {% block custom_urls %}
 <li class="menu-has-children">
     <a href="#">Instructions</a>
-    <ul><li><a href="{% static 'pdf/instruction1.pdf' %}" target="_blank">How-to-annotate</a> </li></ul>
+    <ul>
+        <li><a href="{% static 'pdf/instruction1.pdf' %}" target="_blank">How-to-annotate</a></li>
+    </ul>
 </li>
 {% endblock %}
 {% block body %}
@@ -39,20 +41,28 @@
         {% endif %}
     </div>
     <div id="panel" style="float:left; margin-left: 10px;">
-        <div><input type="submit" value="Submit" class="genric-btn primary-border circle"></div>
+        <div class="container border-top-generic">
+            <h4 class="text-heading">Active object information</h4>
+            <div id="object" class="sample-text">
 
+            </div>
+        </div>
+        <div id="controls" class="container border-top-generic">
+            <input type="submit" value="Submit" class="genric-btn primary-border circle">
+        </div>
     </div>
-<div id="timer" style="display:none;"></div>
+    <div id="timer" style="display:none;"></div>
     <div id="my-timeline"></div>
     {% if dataType != 'pyano' %}
-    <input type="hidden" value="{{ yid }}" name="yid" id="hidden1">
+    <input type="hidden" value="{{ id }}" name="yid" id="hidden1">
     {% else %}
-    <input type="hidden" value="{{ pid }}" name="pid" id="hidden1">
+    <input type="hidden" value="{{ id }}" name="vid" id="hidden1">
     {% endif %}
     <input type="hidden" value="" name="annotations" id="hidden2">
 
 
-        <input id="time_input" type="hidden" name="elapsed_time" value=""/>
+    <input id="time_input" type="hidden" name="elapsed_time" value=""/>
+    <div id="timestamp" style="display:none;"></div>
 </form>
 <script type="text/javascript">
     (function(window, videojs) {
@@ -90,6 +100,7 @@
             $(document).ready(function() {
                 $('#timer').timer({ hidden_selector: "#time_input", format: 'YODM' });
             });
+
 
 </script>
 {% endblock %}

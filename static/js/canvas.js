@@ -9,7 +9,13 @@ var canvas = null;
  */
 window.onload = function() {
   setupCanvas();
-  // setupTimeline();
+  if ($("#yid") != null) {
+    alert("You are annotating a video from external source. " +
+        "Therefore the source video can be editted after you annotate. " +
+        "We recommend to use PYANO resources! " +
+        "If you still want to use external source, we recommend to download video right after finishing your annotations." +
+        "We still let you submit and we will review your work at our best.");
+  }
 };
 
 /**
@@ -34,7 +40,7 @@ function setupCanvas() {
         fill: 'transparent',
         stroke: colors[objectCount % colors.length],
         id: objectCount,
-        hasRotatingPoint: false // whether to obtain orientation information or not
+        hasRotatingPoint: false, // whether to obtain orientation information or not
       });
       canvas.add(baseRect);
       canvas.setActiveObject(baseRect);
@@ -50,31 +56,56 @@ function setupCanvas() {
     }
   });
   canvas.on({
-    "object:modified": function(e) {
+    'object:modified': function(e) {
       var modifiedObject = e.target;
-      console.log(modifiedObject);
+      e.target.set('opacity', 0.3);
+      //console.log(modifiedObject);
       window.player.pause();
       var currentTime = window.player.currentTime();
       insertRecordToTimeline(currentTime, modifiedObject);
-    }
+      displayObjectInfo(e.target.id);
+    },
+  });
+  canvas.on('mouse:over', function(e) {
+    e.target.set('fill', 'red');
+    e.target.set('opacity', 0.3);
+    canvas.renderAll();
+    displayObjectInfo(e.target.id);
+  });
+  canvas.on('mouse:out', function(e) {
+    e.target.set('fill', 'transparent');
+    e.target.set('opacity', 1.0);
+    canvas.renderAll();
+    //$("#object").html("");
   });
 
-  window.player.on("timeupdate", function(e) {
+  window.player.on('timeupdate', function(e) {
     var currentTime = window.player.currentTime();
     //console.log("Moved to timestamp " + currentTime);
     var objects = retrieveObjectByTimestamp(currentTime);
     canvas.clear();
     for (var i = 0; i < objects.length; ++i) {
       var object = objects[i];
-      var o =  baseObject(object["id"]);
-      o.top = object["top"];
-      o.left = object["left"];
-      o.width = object["width"];
-      o.height = object["height"];
+      var o = baseObject(object['id']);
+      o.top = object['top'];
+      o.left = object['left'];
+      o.width = object['width'];
+      o.height = object['height'];
       canvas.add(o);
       //insertRecordToTimeline(currentTime, o);
     }
-  })
+  });
+}
+
+function displayObjectInfo(id) {
+  $("#object").html("")
+  var history = timelineData({"id": id}).order("timestamp").get(0);
+  for (var i = 0; i < history.length; ++i) {
+    var record =  history[i];
+    var timestamp =  record["timestamp"];
+    $("#timestamp").html(timestamp)
+    $("#object").append('<a onclick="gotoTime();return true;">' + timestamp + '</a> ')
+  }
 }
 
 /**
@@ -97,31 +128,31 @@ function setupCanvas() {
  * TAFFYDB management tools
  */
 function insertRecordToTimeline(currentTime, rect) {
-  var count = timelineData({"id": rect.id, "timestamp": currentTime}).count();
+  var count = timelineData({'id': rect.id, 'timestamp': currentTime}).count();
   if (count == 0) {
     timelineData.insert({
-      "timestamp": currentTime,
-      "id": rect.id,
-      "top": rect.top,
-      "left": rect.left,
-      "width": rect.width * rect.scaleX,
-      "height": rect.height * rect.scaleY,
+      'timestamp': currentTime,
+      'id': rect.id,
+      'top': rect.top,
+      'left': rect.left,
+      'width': rect.width * rect.scaleX,
+      'height': rect.height * rect.scaleY,
     });
     //console.log("Inserted a record of object " + rect.id);
   } else {
-    timelineData({"id": rect.id, "timestamp": currentTime}).update({
-      "top": rect.top,
-      "left": rect.left,
-      "width": rect.width * rect.scaleX,
-      "height": rect.height * rect.scaleY,
+    timelineData({'id': rect.id, 'timestamp': currentTime}).update({
+      'top': rect.top,
+      'left': rect.left,
+      'width': rect.width * rect.scaleX,
+      'height': rect.height * rect.scaleY,
     });
     //console.log("Updated a record of object " + rect.id);
   }
-  $("#hidden2").val(timelineData().stringify());
+  $('#hidden2').val(timelineData().stringify());
 }
 
 function retrieveObjectByTimestamp(timestamp) {
-  var ids = timelineData().distinct("id");
+  var ids = timelineData().distinct('id');
   var objects = new Array();
   for (var i = 0; i < ids.length; ++i) {
     var o = linearObjectBBoxInterpolation(timestamp, ids[i]);
@@ -134,12 +165,14 @@ function retrieveObjectByTimestamp(timestamp) {
 }
 
 function linearInterpolation(t1, t, t2, x1, x2) {
-  return x1 + (t-t1)*(x2-x1)/(t2-t1);
+  return x1 + (t - t1) * (x2 - x1) / (t2 - t1);
 }
 
 function linearObjectBBoxInterpolation(timestamp, id) {
-  var beforeTimestamp = timelineData({"timestamp": {"<=": timestamp}, "id": id}).order("timestamp");
-  var afterTimestamp = timelineData({"timestamp": {">": timestamp}, "id": id}).order("timestamp");
+  var beforeTimestamp = timelineData(
+      {'timestamp': {'<=': timestamp}, 'id': id}).order('timestamp');
+  var afterTimestamp = timelineData({'timestamp': {'>': timestamp}, 'id': id}).
+      order('timestamp');
   if (beforeTimestamp.count() < 1) {
     //console.log("No history at " + timestamp + " for object ID " + id);
     return null;
@@ -151,12 +184,13 @@ function linearObjectBBoxInterpolation(timestamp, id) {
       var end = afterTimestamp.first();
       // do interpolation
       var o = baseObject(begin.id);
-      var t1 = begin["timestamp"];
-      var t2 = end["timestamp"];
+      var t1 = begin['timestamp'];
+      var t2 = end['timestamp'];
       o.top = linearInterpolation(t1, timestamp, t2, begin.top, end.top);
       o.left = linearInterpolation(t1, timestamp, t2, begin.left, end.left);
       o.width = linearInterpolation(t1, timestamp, t2, begin.width, end.width);
-      o.height = linearInterpolation(t1, timestamp, t2, begin.height, end.height);
+      o.height = linearInterpolation(t1, timestamp, t2, begin.height,
+          end.height);
       return o;
     }
   }
@@ -171,16 +205,13 @@ function baseObject(id) {
     fill: 'transparent',
     stroke: colors[id % colors.length],
     id: id,
-    hasRotatingPoint: false // whether to obtain orientation information or not
+    hasRotatingPoint: false, // whether to obtain orientation information or not
   });
   return o;
 }
 
-$(function() {
-  $( "#instructions" ).dialog({
-    autoOpen: false
-  });
-  $( "#inst_link" ).click(function() {
-    $( "#instructions" ).dialog( "open" );
-  });
-});
+function gotoTime() {
+  var timestamp = $("#timestamp").value;
+  window.player.play();
+  window.player.currentTime(timestamp);
+}
