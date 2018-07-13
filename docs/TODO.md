@@ -16,3 +16,4 @@ Todo list
     * [ ] Payment schedule (at the beginning or at the end, etc.)
     * [ ] Demand characteristics handling.
     * [ ] Performance boosting methods (will be boosted in an automatic manner!).
+    * [ ] Tournament/competition features.
