@@ -2,24 +2,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="content-type" charset="UTF-8" content="text/html">
-    <meta name="viewport" content="width=device-width">
-    <title></title>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/fav.png">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>{% block sitename %}PYANO{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
 
     <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
     <link href="{% static 'css/survey.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link href="http://players.brightcove.net/videojs-overlay/2/videojs-overlay.css" rel='stylesheet'>
     <script src="{% static 'js/d3.v5.min.js' %}"></script>
-    <script src="{% static 'js/d3-timelines.js' %}"></script>
+    <!--<script src="{% static 'js/d3-timelines.js' %}"></script>-->
     <script src="{% static 'js/video.js' %}"></script>
+    <script src="{% static 'js/videojs-overlay.js' %}"></script>
     <script src="{% static 'js/Youtube.js' %}"></script>
     <script src="{% static 'js/videojs.framebyframe.min.js' %}"></script>
     <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
     <script src="{% static 'js/fabric.min.js' %}"></script>
     <script src="{% static 'js/taffy.js' %}"></script>
+    <link type="text/css" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" rel="Stylesheet"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+
+    <link type="text/css" href="{% static 'css/ui.timer.css' %}" rel="Stylesheet"/>
+    <script type="text/javascript" src="{% static 'js/jquery.ui.timer.js' %}"></script>
     {% block scripts %}{% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+<header id="header" id="home" class="generic-banner">
+    <div class="">
+        <div class="row align-items-center justify-content-between d-flex">
+            <div id="logo">
+                {% block logo %}{% endblock %}
+            </div>
+            <nav id="nav-menu-container">
+                <ul class="nav-menu">
+                    <li class="menu-active"><a href="/">Home</a></li>
+                    <li class="menu-has-children">
+                        <a href="{% if user.is_authenticated %}/accounts/profile{% else %}/accounts/login{% endif %}">Hello ({% if user.is_authenticated %}{{ user }}{% else %}Guest{% endif %})</a>
+                        <ul>
+                            {% if user.is_authenticated %}
+                            <li><a href="/accounts/profile">Profile</a></li>
+                            <li><a href="/accounts/logout">Logout</a></li>
+                            {% else %}
+                            <li><a href="/accounts/login">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% block custom_urls %}{% endblock %}
+                </ul>
+            </nav><!-- #nav-menu-container -->
+        </div>
+    </div>
+</header><!-- #header -->
+
+<div style="margin-top: 80px;margin-left:20px;margin-right:20px;">
+    {% block body %}{% endblock %}
+</div>
+
+{% block custom_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="{% static 'js/vendor/bootstrap.min.js' %}" type="text/javascript"></script>
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+<script src="{% static 'js/easing.min.js' %}"></script>
+<script src="{% static 'js/hoverIntent.js' %}"></script>
+<script src="{% static 'js/superfish.min.js' %}"></script>
+<script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
+<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/jquery.sticky.js' %}"></script>
+<script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+<script src="{% static 'js/parallax.min.js' %}"></script>
+<script src="{% static 'js/mail-script.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
 </body>
 </html>

@@ -4,38 +4,56 @@
 <script src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
+{% block logo %}
+
+{% endblock %}
+
+{% block custom_urls %}
+<li class="menu-has-children">
+    <a href="#">Instructions</a>
+    <ul><li><a href="{% static 'pdf/instruction1.pdf' %}" target="_blank">How-to-annotate</a> </li></ul>
+</li>
+{% endblock %}
 {% block body %}
-<div id="surveyContent">
+<form id="job_result" action="/submission/" method="post">
+    {% csrf_token %}
+    <div id="surveyContent">
+        {% if dataType != 'pyano' %}
+        <video
+                id="videoplayer"
+                class="video-js vjs-default-skin"
+                width="720"
+                style="float: left;"
+                data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v={{ yid }}"}] }'
+                controls>
+        </video>
+        {% else %}
+        <video
+                id="videoplayer"
+                class="video-js vjs-default-skin"
+                width="720"
+                style="float: left;"
+                controls>
+            <source src="{{ source }}" type="video/mp4">
+        </video>
+        {% endif %}
+    </div>
+    <div id="panel" style="float:left; margin-left: 10px;">
+        <div><input type="submit" value="Submit" class="genric-btn primary-border circle"></div>
+
+    </div>
+<div id="timer" style="display:none;"></div>
+    <div id="my-timeline"></div>
     {% if dataType != 'pyano' %}
-    <video
-            id="videoplayer"
-            class="video-js vjs-default-skin"
-            width="720"
-            style="float: left;"
-            data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v={{ yid }}"}] }'
-            controls>
-    </video>
+    <input type="hidden" value="{{ yid }}" name="yid" id="hidden1">
     {% else %}
-    <video
-            id="videoplayer"
-            class="video-js vjs-default-skin"
-            width="720"
-            style="float: left;"
-            controls>
-        <source src="{{ source }}" type="video/mp4">
-    </video>
+    <input type="hidden" value="{{ pid }}" name="pid" id="hidden1">
     {% endif %}
-</div>
-<div id="panel" style="float:left; margin-left: 10px;">
-    <p><b>Thank you for joining our work!</b> <a href="{{ instruction_url }}">Please read the instructions here.</a> </p>
-</div>
-<div id="my-timeline"></div>
-{% if dataType != 'pyano' %}
-<input type="hidden" value="{{ yid }}" name="hidden1" id="hidden1">
-{% else %}
-<input type="hidden" value="{{ pid }}" name="hidden1" id="hidden1">
-{% endif %}
-<script src="http://players.brightcove.net/videojs-overlay/2/videojs-overlay.min.js"></script>
+    <input type="hidden" value="" name="annotations" id="hidden2">
+
+
+        <input id="time_input" type="hidden" name="elapsed_time" value=""/>
+</form>
 <script type="text/javascript">
     (function(window, videojs) {
       var player = window.player = videojs('videoplayer',{
@@ -62,12 +80,16 @@
         overlays: [{
             align: "none",
             content: '<canvas id="canvas" width="'+w+'" height="'+h+'"></canvas>',
-            start: 'play',
-            end: 'finish',
+            start: 'playing',
+            end: 'paused',
             showBackground: false
         }]
     });
     }(window, window.videojs));
+
+            $(document).ready(function() {
+                $('#timer').timer({ hidden_selector: "#time_input", format: 'YODM' });
+            });
 
 </script>
 {% endblock %}
