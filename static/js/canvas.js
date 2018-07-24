@@ -104,7 +104,7 @@ function displayObjectInfo(id) {
     var record =  history[i];
     var timestamp =  record["timestamp"];
     $("#timestamp").html(timestamp)
-    $("#object").append('<a onclick="gotoTime();return true;">' + timestamp + '</a> ')
+    $("#object").append('<button onmouseover="gotoTime();return false;" class="genric-btn primary-border" disabled>' +  String(i+1) + '</button> ')
   }
 }
 
