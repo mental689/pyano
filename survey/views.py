@@ -13,7 +13,9 @@ import datetime, time
 
 def index(request):
     template = loader.get_template('survey/index.html')
-    context = {"message": "Welcome to PsYchological ANnOtation page."}
+    context = {"message": "Welcome to PsYchological ANnOtation page.", "topic": "shoplifting"}
+    if request.GET.get("topic") is not None:
+        context["topic"] = request.GET.get("topic")
     return HttpResponse(template.render(context, request))
 
 @require_GET
@@ -79,3 +81,9 @@ def profile(request):
     template = loader.get_template("registration/profile.html")
     context = {"message": "Welcome to PYANO! {}".format(request.user)}
     return HttpResponse(template.render(context, request))
+
+
+@require_POST
+def search(request):
+    context = {"msg": "welcome"}
+    return context

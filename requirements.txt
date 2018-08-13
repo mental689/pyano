@@ -6,3 +6,4 @@ google-api-python-client
 numpy==1.15.0
 youtube-dl==2018.07.21
 nose
+iPython[all]

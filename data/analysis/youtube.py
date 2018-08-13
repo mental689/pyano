@@ -100,7 +100,7 @@ def check_details(details, check_words=["fake", "fool", "troll"], check_rating=T
     pass
 
 
-def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True, check_in_details=True, duration_type="long"):
+def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True, check_in_details=False, duration_type="any"):
     try:
         searcher = youtube.search()
     except Exception as e:
