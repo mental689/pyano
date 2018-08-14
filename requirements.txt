@@ -3,7 +3,9 @@ boto3
 xmltodict
 glog==0.3.1
 google-api-python-client
+oauth2client==3.0.0
 numpy==1.15.0
 youtube-dl==2018.07.21
 nose
 iPython[all]
+turkic==0.2.4
