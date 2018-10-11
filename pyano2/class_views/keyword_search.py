@@ -90,6 +90,8 @@ class KeywordSearchView(View):
         if "long" in request.POST.getlist("pref[]"):
             duration = "long"
         for keyword in keywords:
+            if keyword is None or keyword == "":
+                continue
             record = self._search_youtube(keyword=keyword,
                                           topic=topic,
                                           user=user,
