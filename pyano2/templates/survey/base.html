@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
+	<title>{% block title %}{% endblock title %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico'%}"/>
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}" />
+  </head>
+  <body>
+    <div class="container" id="wrap">
+	   {% block wrapper %} {% endblock %}
+        <div class="well" id="container-main">
+	       {% block body %}	{% endblock %}
+	   </div>
+	</div>
+	<div class="footer">
+        <div class="container">
+	       {% block footer %}{% endblock %}
+        </div>
+    </div>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+	{% block extrajs %}	{% endblock %}
+  </body>
+</html>
+

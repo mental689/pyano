@@ -1,0 +1,61 @@
+{% extends 'survey/base.html' %}
+{% load i18n %}
+{% load survey_extras %}
+
+{% block title %} {{survey.name}} {% endblock title %}
+
+{% block extrajs %}
+    {{response_form.media}}
+{% endblock %}
+
+{% block body %}
+	<h1> {{survey.name}} </h1>
+	<div class="survey-description"> {{survey.description|safe}} </div>
+	<div><form action="{% url 'survey-detail' id=survey.id %}" method="post">
+	    {% csrf_token %}
+	    <div><h3>Video content</h3>
+	    {% if video.type == 0 %}
+	    <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video.vid }}/?mute=1&start={{ video.start }}&end={{ video.end }}&showinfo=0&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+	    {% elif video.type == 1 %}
+	    <iframe src="https://drive.google.com/file/d/{{ video.vid }}/preview" width="640" height="480"></iframe>
+	    {% else %}
+	    Please follow the URL <a href="{{ video.url }}">here</a> to watch the video content.
+	    {% endif %}
+	    <input type="hidden" id="videoID" name="videoID" value="{{ video.id }}">
+	    </div>
+        {% for category in categories %}
+            <h3> {{category}} </h3>
+            <p> {{category.description}} </p>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+				    <div class="panel-heading">
+				        <h3 class="panel-title"> <a
+				        data-toggle="collapse"
+				        data-parent="#accordion"
+				        href="#collapse{{category.slugify}}">
+				            {% trans "Answer this part" %}
+			            </a></h3>
+				    </div>
+                    <div class="category-container">
+				        <div id="collapse{{category.slugify}}" class="panel-collapse collapse
+				        {{ response_form|collapse_form:category }}">
+				            <div class="panel-body">
+	                           {% include "survey/question.html" %}
+                            </div>
+		                </div>
+                </div>
+            </div>
+        {% empty %}
+            <h3> {% trans "Questions" %} </h3>
+            {% include "survey/question.html" %}
+        {% endfor %}
+
+        <br>
+
+	    <input
+            class="btn btn-default btn-lg"
+	        type="submit"
+	        value="{% trans "I'm done!" %}"
+        >
+	</form></div>
+{% endblock %}

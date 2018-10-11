@@ -119,7 +119,8 @@ def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True
             part="id,snippet",
             videoDefinition=videoDefinition,
             videoLicense=videoLicense,
-            videoDuration=duration_type
+            videoDuration=duration_type,
+            order="relevance"
         ).execute()
     except HttpError as e:
         logger.error("Error while downloading first response ...")
@@ -154,7 +155,8 @@ def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True
                 videoDefinition=videoDefinition,
                 videoLicense=videoLicense,
                 pageToken=pageToken,
-                videoDuration=duration_type
+                videoDuration=duration_type,
+                order="relevance"
             ).execute()
         except HttpError as e:
             logger.error("Error while downloading {}-th response ...".format(count))

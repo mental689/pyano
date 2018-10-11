@@ -12,7 +12,7 @@ import datetime, time
 # Create your views here.
 
 def index(request):
-    template = loader.get_template('survey/index.html')
+    template = loader.get_template('pyano2/index.html')
     context = {"message": "Welcome to PsYchological ANnOtation page.", "topic": "shoplifting"}
     if request.GET.get("topic") is not None:
         context["topic"] = request.GET.get("topic")
@@ -31,7 +31,7 @@ def job(request):
     else:
         type = "pyano"
         id = request.GET.get("vid")
-    template = loader.get_template('survey/job_page.html')
+    template = loader.get_template('pyano2/job_page.html')
     context = {"yid": id, "type": type}
     return HttpResponse(template.render(context, request))
 

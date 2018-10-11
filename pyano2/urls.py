@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from survey.class_views.keyword_search import KeywordSearchView
+from pyano2.class_views.keyword_search import KeywordSearchView
 
 urlpatterns = [
     path('', views.index, name="index"),

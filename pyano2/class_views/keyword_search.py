@@ -1,5 +1,5 @@
 from django.views import View
-from survey.models import Topic, Keyword, SearchResult, SystemSetting, User
+from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
 from django.contrib.auth.models import AnonymousUser
 
 from data.analysis.youtube import search_youtube, build_youtube_instance
