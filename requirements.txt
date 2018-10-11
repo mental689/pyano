@@ -10,3 +10,4 @@ nose
 iPython[all]
 turkic==0.2.4
 git+https://github.com/mental689/django-survey.git
+mysqlclient
