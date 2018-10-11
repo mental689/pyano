@@ -1,5 +1,6 @@
 from django.views import View
 from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
+from survey.models import Video, VideoCategory, Response
 from django.contrib.auth.models import AnonymousUser
 
 from data.analysis.youtube import search_youtube, build_youtube_instance
@@ -44,7 +45,24 @@ class KeywordSearchView(View):
         record.keyword = key
         record.content = results
         record.pref = pref
-        record.save()
+        try:
+            record.save()
+        except Exception as e:
+            logging.error(e)
+
+        for r in results:
+            if 'id' in r and 'kind' in r['id'] and 'videoId' in r['id'] and r['id']['kind'] == "youtube#video":
+                v = Video()
+                v.url = "https://youtube.com/watch?v={}".format(r['id']['videoId'])
+                v.vid = r['id']['videoId']
+                v.cat = VideoCategory.objects.filter(id=1)[0]
+                v.type = 0
+                v.start = 0
+                v.end = 0
+                try:
+                    v.save()
+                except Exception as e:
+                    logging.error(e)
         return record
 
     def post(self, request, *args, **kwargs):
