@@ -31,3 +31,10 @@ $ source env.sh # please modify this if you want to install mysql-server in Ubun
 ## Basic uses
 
 To be updated!
+
+
+## Demo
+
+* Data collection: [http://18.220.206.134:8000/](http://18.220.206.134:8000/)
+
+* Filtering survey: [http://18.220.206.134:8000/survey/1](http://18.220.206.134:8000/survey/1)

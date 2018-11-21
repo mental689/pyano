@@ -1,10 +1,15 @@
 {% extends 'pyano2/_base.html' %}
 
 {% block body %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+<div class="col-lg-4  col-md-6 header-right">
+    <h4 class="pb-30">Login</h4>
+    <form method="post" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <!--<a class="text-uppercase primary-btn" href="#">Get Details</a>-->
+        <div class="form-group">
+            <button class="btn btn-default btn-lg btn-block text-center text-uppercase" type="submit">Login</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

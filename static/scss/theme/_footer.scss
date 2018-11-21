@@ -1,0 +1,164 @@
+/* =================================== */
+/*  Footer Styles
+/* =================================== */
+
+
+/*-------- start footer Area -------------*/
+
+.footer-area {
+    background-color: #000000;
+    h6 {
+        color: $white;
+        margin-bottom: 25px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+}
+
+.copy-right-text {
+    i,
+    a {
+        color: $primary-color;
+    }
+}
+
+.footer-social {
+    a {
+        padding-right: 25px;
+        @include transition();
+        &:hover {
+            i {
+                color: $primary-color;
+            }
+        }
+    }
+    i {
+        color: #cccccc;
+        @include transition();
+    }
+    @include media-breakpoint-down(md) {
+        text-align: left;
+    }
+}
+
+.single-footer-widget {
+    input {
+        border: none;
+        width: 80%!important;
+        font-weight: 300;
+        background: #f9f9ff;
+        color: #eee;
+        padding-left: 20px;
+        border-radius: 0;
+        font-size: 14px;
+        padding: 9.5px;
+        &:focus {
+            background-color: #fff;
+        }
+    }
+    ul li {
+        margin-bottom: 10px;
+        a {
+            color: $text-color;
+            @include transition();
+            &:hover {
+                color: $primary-color;
+            }
+        }
+    }
+    .bb-btn {
+        color: $primary-color;
+        color: #fff;
+        font-weight: 300;
+        border-radius: 0;
+        z-index: 9999;
+        cursor: pointer;
+    }
+    .info {
+        position: absolute;
+        margin-top: 20%;
+        color: #fff;
+        font-size: 12px;
+        &.valid {
+            color: green;
+        }
+        &.error {
+            color: red;
+        }
+    }
+    .click-btn {
+        background-color: $primary-color;
+        color: #000;
+        border-radius: 0;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        padding: 8px 12px;
+        border: 0;
+        span{
+            font-weight:500;
+        }
+    }
+    ::-moz-selection {
+        /* Code for Firefox */
+        background-color: #191919!important;
+        color: $text-color;
+    }
+    ::selection {
+        background-color: #191919!important;
+        color: $text-color;
+    }
+    ::-webkit-input-placeholder {
+        /* WebKit, Blink, Edge */
+        color: $text-color;
+        font-weight: 300;
+    }
+    :-moz-placeholder {
+        /* Mozilla Firefox 4 to 18 */
+        color: $text-color;
+        opacity: 1;
+        font-weight: 300;
+    }
+    ::-moz-placeholder {
+        /* Mozilla Firefox 19+ */
+        color: $text-color;
+        opacity: 1;
+        font-weight: 300;
+    }
+    :-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: $text-color;
+        font-weight: 300;
+    }
+    ::-ms-input-placeholder {
+        /* Microsoft Edge */
+        color: $text-color;
+        font-weight: 300;
+    }
+    @include media-breakpoint-down(md) {
+        margin-bottom: 30px;
+    }
+}
+
+@media(max-width:800px) {
+    .social-widget {
+        margin-top: 30px;
+    }
+}
+
+.footer-text {
+    text-align: center;
+    margin-bottom: 0px;
+    a,
+    i {
+        color: $primary-color;
+    }
+}
+
+.footer-bottom {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+
+/*-------- end footer Area -------------*/
