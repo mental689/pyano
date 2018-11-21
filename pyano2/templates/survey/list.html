@@ -1,14 +1,16 @@
-{% extends 'survey/base.html' %}
+{% extends 'pyano2/_base.html' %}
 {% load i18n %}
 
 {% block body %}
 <div id="intro">
-	<h1>{% trans "Welcome to the Django Survey app"%}</h1>
+    <h1>{% trans "List of available surveys"%}</h1>
 
-	<ul>
-		{% for survey in surveys %}
-		<li><a href="{{ survey.get_absolute_url }}">{% trans "Take the Survey"%} {{survey.name}}</a></li>
-		{% endfor %}
-	</div>
+    <div class="row">
+        <ul>
+            {% for survey in surveys %}
+            <li><a href="{{ survey.get_absolute_url }}">{% trans "Take the Survey"%} {{survey.name}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}

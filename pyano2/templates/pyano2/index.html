@@ -1,50 +1,51 @@
 {% extends 'pyano2/_base.html' %}
 
 {% block body %}
-<div class="gtco-section">
-    <div class="gtco-container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
-                <h2>Search for your Videos</h2>
-                <p>Please use the below search box to find the videos of the videos you want.</p>
+<div class="banner-content col-lg-6 col-md-6 ">
+    <h2>Search for your Videos</h2>
+    <p>Please use the below search box to find the videos of the videos you want.</p>
+    <form action="/keyword_search/" method="post">
+        <div class="form-group">
+            {% csrf_token %}
+            <input type="hidden" class="form-control" id="topic" name="topic" value="{{ topic }}">
+            <div class="form-group">
+            <label for="keywords">Keywords</label>
+            <input type="search" class="form-control txt-field" id="keywords" name="keywords"
+                   placeholder="Use comma to separate the keywords.">
             </div>
+            <div class="form-group">
+                <input type="checkbox" id="hd" name="pref[]" value="hd" checked> <a
+                    href="https://en.wikipedia.org/wiki/High-definition_television">High-Definition</a> videos or above
+                only.
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="cc" name="pref[]" value="cc" checked> <a href="https://creativecommons.org/">CreativeCommons</a>
+                videos only.
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="long" name="pref[]" value="long"> Long videos (longer than 20 mins).
+            </div>
+            <div class="form-group"><input type="submit" class="primary-btn text-uppercase" value="Search"></div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <form action="/keyword_search/" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" class="form-control" id="topic" name="topic" value="{{ topic }}">
-                    <div class="form-group">
-                        <label for="keywords">Keywords</label>
-                        <input type="search" class="form-control" id="keywords" name="keywords" placeholder="Use comma to separate the keywords.">
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="hd" name="pref[]" value="hd"> <a href="https://en.wikipedia.org/wiki/High-definition_television">High-Definition</a> videos or above only.
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="cc" name="pref[]" value="cc"> <a href="https://creativecommons.org/">CreativeCommons</a> videos only.
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" id="long" name="pref[]" value="long"> Long videos (longer than 20 mins).
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn btn-special" value="Search">
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-5 col-md-push-1">
-                <div class="gtco-contact-info">
-                    <h3>Tips and Tricks</h3>
-                    <p>Some tips which might assist you to the right direction.</p>
-                    <ul>
-                        <li class="url"><b>Search in multi-language.</b> For example, if you search for "Shoplifting", you can translate it into "万引き" in Japanese or "Trộm cửa hàng" in Vietnamese or "दुकानों से सामान चोरी" in Hindi language or "
-Vol à l'étalage" in French. Thanks to <a href="https://translate.google.com/">Google Translate</a>. Please use this service because we do not translate your query.</li>
-                        <li class="phone"><b>Care about the device.</b> If you want to search shoplifting videos captured by security cameras, some possible keywords are "Shoplifting security camera", "Shoplifting CCTV footage" and "Shoplifting surveillance camera".</li>
-                        <li class="email"><b>Other details</b> might help either such as the places (shoplifting in drug stores or in beauty stores) or specialized vocabulary can help to refine your search results.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    </form>
+</div>
+<div class="banner-content col-lg-6 col-md-6 ">
+    <h2>Tips and Tricks</h2>
+    <p>Some tips which might assist you to the right direction.</p>
+    <ul>
+        <li class="url"><b>Search in multi-language.</b> For example, if you search for "Shoplifting", you can
+            translate it into "万引き" in Japanese or "Trộm cửa hàng" in Vietnamese or "दुकानों से सामान चोरी" in Hindi
+            language or "
+            Vol à l'étalage" in French. Thanks to <a href="https://translate.google.com/">Google Translate</a>.
+            Please use this service because we do not translate your query.
+        </li>
+        <li class="phone"><b>Care about the device.</b> If you want to search shoplifting videos captured by
+            security cameras, some possible keywords are "Shoplifting security camera", "Shoplifting CCTV footage"
+            and "Shoplifting surveillance camera".
+        </li>
+        <li class="email"><b>Other details</b> might help either such as the places (shoplifting in drug stores or
+            in beauty stores) or specialized vocabulary can help to refine your search results.
+        </li>
+    </ul>
 </div>
 {% endblock %}
