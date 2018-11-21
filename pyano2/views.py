@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 import glog as log
 import datetime, time
+from pyano2.forms import SignUpForm
 
 # Create your views here.
 
@@ -62,9 +63,9 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('')
     if request.method == "GET":
-        form = UserCreationForm()
+        form = SignUpForm()
     else:
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
