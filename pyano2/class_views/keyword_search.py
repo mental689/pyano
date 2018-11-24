@@ -1,17 +1,17 @@
-from django.views import View
-from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
-from survey.models import Video, VideoCategory, Response
+import logging
+from time import time
+
 from django.contrib.auth.models import AnonymousUser
+from django.shortcuts import render
+from django.views import View
+from survey.models import Video, VideoCategory
 
 from data.analysis.youtube import search_youtube, build_youtube_instance
-import logging, json
-from django.shortcuts import render
-from time import time
-import math
+from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
 
 
 class KeywordSearchView(View):
-    template_name = "keyword_search.html"
+    template_name = "pyano2/keyword_search.html"
 
     def _get_dev_key(self):
         try:
