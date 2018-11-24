@@ -97,6 +97,12 @@ class KeywordSearchView(View):
                                           user=user,
                                           pref=request.POST.getlist("pref[]"),
                                           hd=hd, cc=cc, duration=duration)
+            if record is None:
+                video_idx = list(set(video_idx))
+                context = {"video_idx": video_idx, "num_results": len(video_idx),
+                           "keywords": request.POST.get("keywords"),
+                           "error": "Cannot obtain your record after {} results!".format(len(video_idx))}
+                return render(request, template_name=self.template_name, context=context)
             results = record.content
             for result in results:
                 if not "id" in result or not "videoId" in result["id"]:
@@ -104,7 +110,8 @@ class KeywordSearchView(View):
                 video_idx.append(result["id"]["videoId"])
         video_idx = list(set(video_idx))
 
-        context = {"video_idx": video_idx, "num_results": len(video_idx), "keywords": request.POST.get("keywords")}
+        context = {"video_idx": video_idx, "num_results": len(video_idx),
+                   "keywords": request.POST.get("keywords"), "error": None}
         # logging.info(request.POST.getlist("pref[]"))
         logging.info(len(video_idx))
         return render(request, template_name=self.template_name, context=context)
