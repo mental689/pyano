@@ -1,7 +1,9 @@
 {% load static %}
+{% load analytical %}
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 <head>
+    {% analytical_head_top %}
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicon-->
@@ -29,8 +31,10 @@
     <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% analytical_head_bottom %}
 </head>
 <body>
+{% analytical_body_top %}
 <header id="header">
     <div class="header-top">
     </div>
@@ -152,5 +156,6 @@
 
 {% block custom_js %}
 {% endblock %}
+{% analytical_body_bottom %}
 </body>
 </html>
