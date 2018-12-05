@@ -2,15 +2,24 @@
 {% load i18n %}
 
 {% block body %}
-<div id="intro">
-    <h1>{% trans "List of available surveys"%}</h1>
-
-    <div class="row">
-        <ul>
+<div class="section-top-border">
+    <h3 class="mb-30">List of surveys</h3>
+    <div class="progress-table-wrap">
+        <div class="progress-table">
+            <div class="table-head">
+                <div class="serial">#</div>
+                <div class="country">Survey</div>
+                <div class="visit">Questions</div>
+            </div>
             {% for survey in surveys %}
-            <li><a href="{{ survey.get_absolute_url }}">{% trans "Take the Survey"%} {{survey.name}}</a></li>
+            <div class="table-row">
+                <div class="serial">{{ survey.id }}</div>
+                <div class="country"><a href="{{ survey.get_absolute_url }}">
+                    {{survey.name}}</a></div>
+                <div class="visit">{{ survey.num_questions }}</div>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 </div>
 {% endblock %}

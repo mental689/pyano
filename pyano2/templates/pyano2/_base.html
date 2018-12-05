@@ -45,6 +45,7 @@
                 <ul class="nav-menu">
                     <li class="menu-active"><a href="/">Keyword search</a></li>
                     <li class="menu-active"><a href="/survey">Surveys</a></li>
+                    <li class="menu-active"><a href="/invite">Invitations</a></li>
                     <li class="menu-has-children"><a href="{% if user.is_authenticated %}/accounts/profile{% else %}/accounts/login{% endif %}">
                         Hello {% if user.is_authenticated %}{{ user }}{% else %}Guest{% endif %}</a>
                         <ul>
@@ -62,6 +63,7 @@
                                 {% endif %}
                         </ul>
                     </li>
+                    <!--<li class="menu-active"><a href="/about">About</a></li>-->
                 </ul>
             </nav><!-- #nav-menu-container -->
         </div>
