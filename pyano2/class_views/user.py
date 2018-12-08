@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 from survey.models import *
-from pyano2.models import Invitation
 
 from pyano2.forms import SignUpForm
 
@@ -42,11 +41,5 @@ class ProfileView(View):
         context['keywords'] = keywords
         responses = Response.objects.filter(user=request.user)
         context['responses'] = responses
-        # get invitors
-        invitations = Invitation.objects.filter(invitor=request.user)
-        context['invitations'] = invitations
-        # get invited
-        invites = Invitation.objects.filter(invited=request.user)
-        context['invites'] = invites
         return render(request, template_name=self.template_name, context=context)
 
