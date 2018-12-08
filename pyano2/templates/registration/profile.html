@@ -1,7 +1,7 @@
 {% extends 'pyano2/_base.html' %}
 
 {% block body %}
-    <div class="col-lg-20 col-md-20">
+<div class="col-lg-20 col-md-20">
     <h3 class="mb-30">Profile</h3>
     <div class="row">
         <div class="col-md-4">
@@ -91,6 +91,90 @@
         </table>
     </div>
 </div>
+
+{% if invitations|length > 0 %}
+<div class="col-lg-12 col-md-12">
+    <h3 class="mb-30">Your own invitations</h3>
+    <div class="row">
+        <table id="invitations">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Invites</th>
+                <th>Emai</th>
+                <th>Invited at</th>
+                <th>Job</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for invitation in invitations %}
+            <tr>
+                <th>{{invitation.id}}</th>
+                <th>{{invitation.name}}</th>
+                <th>{{invitation.email}}</th>
+                <th>{{invitation.created}}</th>
+                <th><a href="{{ invitation.survey.get_absolute_url }}" target="_blank">
+                    {{invitation.survey.name}}</a></th>
+                <th>{% ifequal invitation.status 0%}
+                    Pending{%endifequal%}
+                    {% ifequal invitation.status 1%}
+                    Accepted
+                    {%endifequal%}
+                    {%ifequal invitation.status 2%}
+                    Declined
+                    {%endifequal%}
+                </th>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if invites|length > 0 %}
+<div class="col-lg-12 col-md-12">
+    <h3 class="mb-30">You are invited by</h3>
+    <div class="row">
+        <table id="invites">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Invitor</th>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Invited at</th>
+                <th>Job</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for invitation in invites %}
+            <tr>
+                <th>{{invitation.id}}</th>
+                <th>{{invitation.invitor.first_name}} {{invitation.invitor.last_name}}</th>
+                <th>{{invitation.invitor.email}}</th>
+                <th>{{invitation.invitor.username}}</th>
+                <th>{{invitation.created}}</th>
+                <th><a href="{{ invitation.survey.get_absolute_url }}" target="_blank">
+                    {{invitation.survey.name}}</a></th>
+                <th>{% ifequal invitation.status 0%}
+                    Pending{%endifequal%}
+                    {% ifequal invitation.status 1%}
+                    <a href="/accept/?uuid={{invitation.uuid}}">Accepted</a>
+                    {%endifequal%}
+                    {%ifequal invitation.status 2%}
+                    Declined
+                    {%endifequal%}
+                </th>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block custom_js %}
@@ -98,7 +182,10 @@
     $(document).ready( function () {
     $('#keywords').DataTable();
     $('#answers').DataTable();
+    $('#invitations').DataTable();
+    $('#invites').DataTable();
 } );
+
 
 
 </script>
