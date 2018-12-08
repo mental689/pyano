@@ -1,0 +1,17 @@
+{% extends 'pyano2/_base.html' %}
+{% block body %}
+
+<div class="col-lg-12 col-md-12">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <p>
+        The error is {{ error }}. But thank you very much, let's finish here!
+    </p>
+    {% else %}
+    <h3 class="mb-30">Thank you very much!</h3>
+    {%endif%}
+</div>
+{% endblock %}
+
+{% block custom_js %}
+{% endblock %}

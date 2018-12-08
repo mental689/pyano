@@ -1,0 +1,38 @@
+{% extends 'pyano2/_base.html' %}
+{% block body %}
+
+<div class="col-lg-12 col-md-12">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <p>
+        The error is {{ error }}. Please come and check again later!
+    </p>
+    {% else %}
+    <h3 class="mb-30">Thank you for spending time with us!</h3>
+    <div class="row">
+        <div class="col-md-12 mt-sm-20 left-align-p">
+            We acknowledge that you cannot accept this offer. You can recommend maximally {{ recommend_range|length }} alternatives by their names and emails.
+            We appreciate your collaborations.
+            Thank you very much!</br>
+            </br>
+            Shoplifting prevention project.
+            <form action="/recommend_after_decline/" method="post">
+                {% csrf_token %}
+                {% for i in recommend_range %}
+                <h4>Alternative {{i}}</h4>
+                    <input type="text" name="fullname_{{i}}" placeholder="Full Name"
+                           onfocus="this.placeholder = ''" onblur="this.placeholder = 'Full Name'" class="single-input">
+                    <input type="email" name="email_{{i}}" placeholder="Email address"
+                           onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" class="single-input">
+                {% endfor %}
+                <input type="hidden" value="{{uuid}}" name="uuid">
+                <input type="submit" class="genric-btn success circle" value="Finish">
+            </form>
+        </div>
+    </div>
+    {%endif%}
+</div>
+{% endblock %}
+
+{% block custom_js %}
+{% endblock %}
