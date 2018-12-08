@@ -39,14 +39,14 @@
                 {% if invitation.job == 2 %}
                 <li>You <b>DON'T</b> need to annotate videos which already have more than 2 responses.</li>
                 <li>There are {{reviewers|length}} reviewers accepted this job.
-                    {% if reviewers|length > 0 %}The contacts of reviewers for this job are:
-                    {% for reviewer in reviewers %}{{reviewer.email}}{%endfor%}. You can contact them for assistances as
+                    {% if reviewers|length > 0 %}The contacts of reviewers for this job are:<br/>
+                    {% for reviewer in reviewers %}{{reviewer.email}}<br/>{%endfor%}. You can contact them for assistances as
                     well.{%endif%}
                 </li>
                 {% else %}
                 <li>There are {{annotators|length}} annotators accepted this job.
-                    {% if annotators|length > 0 %}The contacts of annotators for this job are:
-                    {% for annotator in annotators %}{{annotator.email}}{%endfor%}.{%endif%}
+                    {% if annotators|length > 0 %}The contacts of annotators for this job are:<br/>
+                    {% for annotator in annotators %}{{annotator.email}}<br/>{%endfor%}.{%endif%}
                 </li>
                 {% endif %}
             </ol>

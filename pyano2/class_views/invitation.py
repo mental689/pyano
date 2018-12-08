@@ -73,7 +73,7 @@ class InvitationView(View):
                   'As an Annotator, you will have to annotate a number of videos following the instruction from Reviewer. ' \
                   'As a Reviewer, you will have to use your expertise to guide the annotator to learn how to annotate a video, then after the instruction, ' \
                   'annotators can annotate a large number of videos by themselves. \n\n' \
-                  'For specific guidelines, please feel free to confirm the guideline at: http://13.58.121.50:8000/surveys/{} \n\n' \
+                  'For specific guidelines, please feel free to confirm the guideline at: http://13.58.121.50:8000/survey/{} \n\n' \
                   'To Accept this invitation, please head to http://13.58.121.50:8000/accept/?uuid={}. ' \
                   'If you do not have an account, the above link will guide you to create one. ' \
                   'If you are busy or having some reasons not to accept this job, please head to http://13.58.121.50:8000/decline/?uuid={} to decline the job offer. ' \
