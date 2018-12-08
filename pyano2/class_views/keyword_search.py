@@ -2,9 +2,11 @@ import logging
 from time import time
 
 from django.contrib.auth.models import AnonymousUser
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.conf import settings
 from django.views import View
 from survey.models import Video, VideoCategory
+from django.utils.html import escape
 
 from data.analysis.youtube import search_youtube, build_youtube_instance
 from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
@@ -43,7 +45,7 @@ class KeywordSearchView(View):
             key = keys[0]
         record = SearchResult()
         record.keyword = key
-        record.content = results
+        record.content = escape(results)
         record.pref = pref
         try:
             record.save()
@@ -66,14 +68,16 @@ class KeywordSearchView(View):
         return record
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(to="{}?next=/".format(settings.LOGIN_URL))
         # logging.info(request.POST)
         keywords = request.POST.get("keywords").split(",")
         video_idx = []
         user = request.user
-        if user is None or isinstance(user, AnonymousUser):
-            user = User()
-            user.username = "Guest_{}".format(time())
-            user.save()
+        # if user is None or isinstance(user, AnonymousUser):
+        #     user = User()
+        #     user.username = "Guest_{}".format(time())
+        #     user.save()
         topic_txt = request.POST.get("topic")
         topics = Topic.objects.filter(name=topic_txt)
         if len(topics) == 0:

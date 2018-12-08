@@ -1,0 +1,102 @@
+{% extends 'pyano2/_base.html' %}
+{% block body %}
+
+<div class="col-lg-12 col-md-12">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <p>
+        The error is {{ error }}. Please come and check again later!
+    </p>
+    {% else %}
+    <h3 class="mb-30">Thank you for accepting our invitation!</h3>
+    <div class="row">
+        <div class="col-md-12 mt-sm-20 left-align-p">
+            <p>
+                Please follow the instructions.</br>
+                {% if invitation.invited == None %}
+                <b>We cannot find the account associated with your email in our database</b>.
+                If you don't have an account, please use the button <b>Register</b> to continue.
+                Your email is {{ invitation.email }}.
+                {% elif not user.is_authenticated %}
+                <b>We found one account associated with your email.</b>.
+                If you already have an account, please use the button <b>Login</b> to continue.
+                Your email is {{ invitation.email }}.
+                {% else %}
+            <ol>
+                <li>Your invitor contact is {{ invitation.invitor.email }}.
+                    Please contact the invitor if you have further questions.
+                </li>
+                <li>The job you will do is to {% if invitation.job == 1 %}review the annotations{% else %}annotate the
+                    videos{% endif %} in the following survey:
+                    <a href="{{invitation.survey.get_absolute_url}}">{{ invitation.survey.name }}</a>.
+                </li>
+                <li>
+                    The survey <a href="{{invitation.survey.get_absolute_url}}">{{ invitation.survey.name }}</a> has
+                    {{n_videos}} videos.
+                    Their progresses and URLs are provided below.
+                    Instructions for annotator are given in each URL, so please follow them to finish the job.
+                </li>
+                {% if invitation.job == 2 %}
+                <li>You <b>DON'T</b> need to annotate videos which already have more than 2 responses.</li>
+                <li>There are {{reviewers|length}} reviewers accepted this job.
+                    {% if reviewers|length > 0 %}The contacts of reviewers for this job are:
+                    {% for reviewer in reviewers %}{{reviewer.email}}{%endfor%}. You can contact them for assistances as
+                    well.{%endif%}
+                </li>
+                {% else %}
+                <li>There are {{annotators|length}} annotators accepted this job.
+                    {% if annotators|length > 0 %}The contacts of annotators for this job are:
+                    {% for annotator in annotators %}{{annotator.email}}{%endfor%}.{%endif%}
+                </li>
+                {% endif %}
+            </ol>
+            {% endif %}
+
+            </p>
+            <p>
+                {% if invitation.invited == None %}
+                <a href="/register/?next={{request.path}}?uuid={{uuid}}" class="genric-btn primary circle">Register</a>
+                {% elif not user.is_authenticated %}
+                <a href="/accounts/login/?next={{request.path}}?uuid={{uuid}}"
+                   class="genric-btn success circle">Login</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% if invitation.invited != None and user.is_authenticated %}
+<div class="col-lg-12  col-md-6">
+    <h3 class="mb-30">Your jobs</h3>
+    <table id="videos">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Video</th>
+            <th>Responses</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for video in videos %}
+        <tr>
+            <th>{{ video.id }}</th>
+            <th><a href="{{ invitation.survey.get_absolute_url }}/?videoID={{video.id}}" target="_blank">
+                {{video.vid}}</a></th>
+            <th>{{video.num_responses}}</th>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(document).ready( function () {
+    $('#videos').DataTable();
+} );
+
+
+</script>
+{% endblock %}

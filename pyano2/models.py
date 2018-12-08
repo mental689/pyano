@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from survey.models import Survey
 
 
 # For keyword search
@@ -33,5 +34,9 @@ class Invitation(models.Model):
     name = models.CharField(max_length=255, default="")
     job = models.IntegerField(choices=JOB_CHOICES, default=2)
     email = models.EmailField(max_length=254, blank=False)
+    invitor = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='invitors')
+    invited = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='invitees')
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, blank=False, null=False, related_name='surveys')
+    uuid = models.CharField(_("Invitation unique identifier"), max_length=255, unique=True)
 
 

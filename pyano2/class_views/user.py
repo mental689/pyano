@@ -11,13 +11,13 @@ class RegisterView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('')
+            return redirect('/')
         form = SignUpForm()
         return render(request, template_name=self.template_name, context={"form": form})
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('')
+            return redirect('/')
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()

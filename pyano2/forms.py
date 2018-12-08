@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from pyano2.models import Invitation
+from pyano2.models import Invitation, Survey
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -22,12 +22,18 @@ JOB_CHOICES = (
 
 
 class InviteReviewerAnnotatorForm(forms.Form):
+    surveys = Survey.objects.filter(is_published=True)
+    SURVEY_CHOICES = []
+    for survey in surveys:
+        SURVEY_CHOICES.append((survey.id, survey.name))
+    SURVEY_CHOICES = tuple(SURVEY_CHOICES)
     name = forms.CharField(max_length=255, label="Target name", help_text=_("Full name"))
-    job = forms.ChoiceField(label="Position to invite", choices=JOB_CHOICES, initial='Annotator', widget=forms.Select(), required=True)
+    job = forms.ChoiceField(label="Position to invite", choices=JOB_CHOICES, initial='', widget=forms.Select(), required=True)
     email = forms.EmailField(max_length=254, help_text=_('Required. Inform a valid email address.'))
+    survey = forms.ChoiceField(label='Work to do', choices=SURVEY_CHOICES, initial='', widget=forms.Select(), required=True, help_text=_('Name of the surveys'))
     class Meta:
         model = Invitation
-        fields = ('name', 'job', 'email')
+        fields = ('name', 'job', 'email', 'survey')
 
 
 
