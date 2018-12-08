@@ -13,14 +13,14 @@ class Topic(models.Model): # topics will be added by admins
     updated = models.DateTimeField(auto_now=True)
 
 class Keyword(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='keywords', null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='keywords', null=True)
     content = models.CharField(max_length=255, default="")
     created = models.DateTimeField(auto_created=True, default=now, blank=False, null=False)
     updated = models.DateTimeField(auto_now=True)
 
 class SearchResult(models.Model):
-    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
+    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE, related_name="searches")
     content = models.TextField(blank=True)
     pref = models.TextField(blank=True)
     created = models.DateTimeField(auto_created=True, default=now, blank=False, null=False)

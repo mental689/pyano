@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
+from survey.models import *
 
 from pyano2.forms import SignUpForm
 
@@ -35,5 +36,10 @@ class ProfileView(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(to="{}?next=/profile".format(settings.LOGIN_URL))
-        return render(request, template_name=self.template_name, context={})
+        context = {}
+        keywords = request.user.keywords.all()
+        context['keywords'] = keywords
+        responses = Response.objects.filter(user=request.user)
+        context['responses'] = responses
+        return render(request, template_name=self.template_name, context=context)
 

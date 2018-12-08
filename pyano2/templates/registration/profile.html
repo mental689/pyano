@@ -1,5 +1,105 @@
 {% extends 'pyano2/_base.html' %}
 
 {% block body %}
-{{ message }}
+    <div class="col-lg-20 col-md-20">
+    <h3 class="mb-30">Profile</h3>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="single-defination">
+                <h4 class="mb-20">Search</h4>
+                <p>
+                <ul class="unordered-list">
+                    <li>You made {{keywords|length}} searches.</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="single-defination">
+                <h4 class="mb-20">Answers to Survey</h4>
+                <p>
+                <ul class="unordered-list">
+                    <li>You made {{responses|length}} answers to our surveys.</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="single-defination">
+                <h4 class="mb-20">Basic information</h4>
+                <p>
+                <ul class="unordered-list">
+                    <li>First name: {{user.first_name}}</li>
+                    <li>Last name: {{user.last_name}}</li>
+                    <li>Email: {{user.email}}</li>
+                    <li>Joined at {{user.date_joined}}</li>
+                    <li>Last login: {{user.last_login}}</li>
+                </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-6 col-md-6">
+    <h3 class="mb-30">Your keywords</h3>
+    <div class="row">
+        <table id="keywords">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Keyword</th>
+                <th>Searched at</th>
+                <th>Topic</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for keyword in keywords %}
+            <tr>
+                <th>{{ keyword.id }}</th>
+                <th>{{keyword.content}}</th>
+                <th>{{keyword.created}}</th>
+                <th>{{keyword.topic.name}}</th>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="col-lg-6 col-md-6">
+    <h3 class="mb-30">Your Answers</h3>
+    <div class="row">
+        <table id="answers">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Survey</th>
+                <th>Answered at</th>
+                <th>Video</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for response in responses %}
+            <tr>
+                <th>{{response.id }}</th>
+                <th>{{response.survey.name}}</th>
+                <th>{{response.updated}}</th>
+                <th><a href="{{ response.survey.get_absolute_url }}/?videoID={{response.video.id}}" target="_blank">
+                    {{response.video.vid}}</a></th>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(document).ready( function () {
+    $('#keywords').DataTable();
+    $('#answers').DataTable();
+} );
+
+
+</script>
 {% endblock %}

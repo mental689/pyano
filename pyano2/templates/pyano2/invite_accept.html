@@ -11,8 +11,7 @@
     <h3 class="mb-30">Thank you for accepting our invitation!</h3>
     <div class="row">
         <div class="col-md-12 mt-sm-20 left-align-p">
-            <p>
-                Please follow the instructions.</br>
+                Please follow the instructions.<br/>
                 {% if invitation.invited == None %}
                 <b>We cannot find the account associated with your email in our database</b>.
                 If you don't have an account, please use the button <b>Register</b> to continue.
@@ -22,7 +21,7 @@
                 If you already have an account, please use the button <b>Login</b> to continue.
                 Your email is {{ invitation.email }}.
                 {% else %}
-            <ol>
+            <ul class="unordered-list">
                 <li>Your invitor contact is {{ invitation.invitor.email }}.
                     Please contact the invitor if you have further questions.
                 </li>
@@ -38,21 +37,10 @@
                 </li>
                 {% if invitation.job == 2 %}
                 <li>You <b>DON'T</b> need to annotate videos which already have more than 2 responses.</li>
-                <li>There are {{reviewers|length}} reviewers accepted this job.
-                    {% if reviewers|length > 0 %}The contacts of reviewers for this job are:<br/>
-                    {% for reviewer in reviewers %}{{reviewer.email}}<br/>{%endfor%}. You can contact them for assistances as
-                    well.{%endif%}
-                </li>
                 {% else %}
-                <li>There are {{annotators|length}} annotators accepted this job.
-                    {% if annotators|length > 0 %}The contacts of annotators for this job are:<br/>
-                    {% for annotator in annotators %}{{annotator.email}}<br/>{%endfor%}.{%endif%}
-                </li>
                 {% endif %}
-            </ol>
+            </ul>
             {% endif %}
-
-            </p>
             <p>
                 {% if invitation.invited == None %}
                 <a href="/register/?next={{request.path}}?uuid={{uuid}}" class="genric-btn primary circle">Register</a>

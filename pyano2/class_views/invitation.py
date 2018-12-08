@@ -134,16 +134,18 @@ class AcceptInvitationView(View):
             # Find other invited reviewers and annotators
             reviewers = Invitation.objects.filter(survey=invitation.survey, job=1)
             annotators = Invitation.objects.filter(survey=invitation.survey, job=2)
+            prev_status = invitation.done
             invitation.done = True
             invitation.status = 1
             invitation.save()
             context = {"invitation": invitation, "n_videos": len(videos), "videos": videos,
                        "reviewers": reviewers, "annotators": annotators}
             # send email to invitor
-            try:
-                self.email_invitor(invitation)
-            except Exception as e:
-                logging.error("Cannot send email to invitor with error: {}".format(e))
+            if not prev_status:
+                try:
+                    self.email_invitor(invitation)
+                except Exception as e:
+                    logging.error("Cannot send email to invitor with error: {}".format(e))
         else:
             context = {'error': 'No invitation found!'}
         context['request'] = request

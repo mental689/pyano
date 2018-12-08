@@ -8,7 +8,7 @@ from django.views import View
 from survey.models import Video, VideoCategory
 from django.utils.html import escape
 
-from data.analysis.youtube import search_youtube, build_youtube_instance
+from data.downloader.youtube import search_youtube, build_youtube_instance
 from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
 
 
@@ -70,7 +70,7 @@ class KeywordSearchView(View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(to="{}?next=/".format(settings.LOGIN_URL))
-        # logging.info(request.POST)
+        logging.info(request.POST)
         keywords = request.POST.get("keywords").split(",")
         video_idx = []
         user = request.user
@@ -78,20 +78,19 @@ class KeywordSearchView(View):
         #     user = User()
         #     user.username = "Guest_{}".format(time())
         #     user.save()
-        topic_txt = request.POST.get("topic")
-        topics = Topic.objects.filter(name=topic_txt)
-        if len(topics) == 0:
-            topic = Topic()
-            topic.name = topic_txt
-            topic.save()
-        else:
-            topic = topics[0]
+        topic_id = request.POST.get("topic")
+        topics = Topic.objects.filter(id=topic_id)
+        topic = topics[0]
         hd, cc, duration = False, False, "any"
-        if "hd" in request.POST.getlist("pref[]"):
+        pref = []
+        if request.POST.get("pref_hd"):
+            pref.append(request.POST.get("pref_hd"))
             hd = True
-        if "cc" in request.POST.getlist("pref[]"):
+        if request.POST.get("pref_cc"):
+            pref.append(request.POST.get("pref_cc"))
             cc = True
-        if "long" in request.POST.getlist("pref[]"):
+        if request.POST.get("pref_long"):
+            pref.append(request.POST.get("pref_long"))
             duration = "long"
         for keyword in keywords:
             if keyword is None or keyword == "":
@@ -99,7 +98,7 @@ class KeywordSearchView(View):
             record = self._search_youtube(keyword=keyword,
                                           topic=topic,
                                           user=user,
-                                          pref=request.POST.getlist("pref[]"),
+                                          pref=pref,
                                           hd=hd, cc=cc, duration=duration)
             if record is None:
                 video_idx = list(set(video_idx))
