@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 from survey.models import *
-from pyano2.models import Invitation
+from pyano2.models import Invitation, Credit
 
 from pyano2.forms import SignUpForm
 
@@ -48,5 +48,14 @@ class ProfileView(View):
         # get invited
         invites = Invitation.objects.filter(invited=request.user)
         context['invites'] = invites
+        # get number of credits gained
+        total_credits = 0
+        credits = Credit.objects.all()
+        for response in responses:
+            for credit in credits:
+                if response.survey == credit.survey:
+                    total_credits += credit.point
+                    break
+        context['gained_credits'] = total_credits
         return render(request, template_name=self.template_name, context=context)
 

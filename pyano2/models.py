@@ -40,7 +40,8 @@ JOB_CHOICES = (
 STATUSES = (
     (0, _("Not decided")),
     (1, _("Accepted")),
-    (2, _("Declined"))
+    (2, _("Declined")),
+    (3, _('Expired'))
 )
 
 
@@ -63,6 +64,13 @@ class Alternative(models.Model):
     email = models.EmailField(max_length=254, blank=True, null=False)
     invitation = models.ForeignKey(Invitation, blank=True, null=True, related_name="alternatives", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_created=True, default=now, blank=False, null=False)
+    updated = models.DateTimeField(auto_now=True)
+
+
+class Credit(models.Model):
+    survey = models.ForeignKey(Survey, null=True, related_name='points', on_delete=models.CASCADE, unique=True)
+    point = models.FloatField(default=1.0, help_text=_("The number of credits user will be paid for a job done."))
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
 

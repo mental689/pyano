@@ -11,6 +11,11 @@
                 <ul class="unordered-list">
                     <li>You made {{keywords|length}} searches.</li>
                     <li>You made {{responses|length}} answers to our surveys.</li>
+                    <li>You gained {{gained_credits}} points from your answers.
+                        We do not handle the payment methods inside this system, it depends on your own contract.
+                        Please inquire your own invitors for each job.
+                        The amount of credits is just how much you did (quantity), not how good you did (quality).
+                    </li>
                 </ul>
                 </p>
             </div>
@@ -85,7 +90,7 @@
 
 {% if invitations|length > 0 %}
 <div class="col-lg-12 col-md-12">
-    <h3 class="mb-30">Your invited these people</h3>
+    <h3 class="mb-30">You invited these people</h3>
     <div class="row">
         <table id="invitations">
             <thead>
@@ -95,6 +100,7 @@
                 <th>Emai</th>
                 <th>Invited at</th>
                 <th>Job</th>
+                <th>Position</th>
                 <th>Status</th>
             </tr>
             </thead>
@@ -107,6 +113,7 @@
                 <th>{{invitation.created}}</th>
                 <th><a href="{{ invitation.survey.get_absolute_url }}" target="_blank">
                     {{invitation.survey.name}}</a></th>
+                <th>{% ifequal invitation.job 1%}Reviewer{%else%}Annotator{%endifequal%}</th>
                 <th>{% ifequal invitation.status 0%}
                     Pending{%endifequal%}
                     {% ifequal invitation.status 1%}
@@ -137,6 +144,7 @@
                 <th>Username</th>
                 <th>Invited at</th>
                 <th>Job</th>
+                <th>Position</th>
                 <th>Status</th>
             </tr>
             </thead>
@@ -150,6 +158,7 @@
                 <th>{{invitation.created}}</th>
                 <th><a href="{{ invitation.survey.get_absolute_url }}" target="_blank">
                     {{invitation.survey.name}}</a></th>
+                <th>{% ifequal invitation.job 1%}Reviewer{%else%}Annotator{%endifequal%}</th>
                 <th>{% ifequal invitation.status 0%}
                     Pending (<a href="/accept/?uuid={{invitation.uuid}}">Accept</a>/<a href="/decline/?uuid={{invitation.uuid}}">Decline</a>)
                     {%endifequal%}

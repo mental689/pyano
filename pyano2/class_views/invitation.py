@@ -117,6 +117,7 @@ class AcceptInvitationView(View):
                 context = {'error': 'The invitation has been expired! '
                                     'Please contact your invitor if you changed your mind!', 'uuid': uuid}
                 invitation.done = False # expired but not done
+                invitation.status = 3
                 invitation.save()
                 return render(request, template_name=self.template_name, context=context)
             # get the number of videos
@@ -190,6 +191,8 @@ class DeclineInvitationView(View):
                     context = {'error': 'This invitation has been responded!', 'uuid': uuid}
                     return render(request, template_name=self.template_name, context=context)
                 if now() - invitation.created > timedelta(+7):
+                    invitation.status = 3
+                    invitation.save()
                     context = {'error': 'The invitation has been expired! '
                                         'Please contact your invitor if you changed your mind!', 'uuid': uuid}
                     return render(request, template_name=self.template_name, context=context)
