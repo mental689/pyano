@@ -4,27 +4,18 @@
 <div class="col-lg-20 col-md-20">
     <h3 class="mb-30">Profile</h3>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="single-defination">
-                <h4 class="mb-20">Search</h4>
+                <h4 class="mb-20">What you've done</h4>
                 <p>
                 <ul class="unordered-list">
                     <li>You made {{keywords|length}} searches.</li>
-                </ul>
-                </p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="single-defination">
-                <h4 class="mb-20">Answers to Survey</h4>
-                <p>
-                <ul class="unordered-list">
                     <li>You made {{responses|length}} answers to our surveys.</li>
                 </ul>
                 </p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="single-defination">
                 <h4 class="mb-20">Basic information</h4>
                 <p>
@@ -66,7 +57,7 @@
     </div>
 </div>
 <div class="col-lg-6 col-md-6">
-    <h3 class="mb-30">Your Answers</h3>
+    <h3 class="mb-30">Your answers</h3>
     <div class="row">
         <table id="answers">
             <thead>
@@ -94,7 +85,7 @@
 
 {% if invitations|length > 0 %}
 <div class="col-lg-12 col-md-12">
-    <h3 class="mb-30">Your own invitations</h3>
+    <h3 class="mb-30">Your invited these people</h3>
     <div class="row">
         <table id="invitations">
             <thead>
@@ -160,7 +151,8 @@
                 <th><a href="{{ invitation.survey.get_absolute_url }}" target="_blank">
                     {{invitation.survey.name}}</a></th>
                 <th>{% ifequal invitation.status 0%}
-                    Pending{%endifequal%}
+                    Pending (<a href="/accept/?uuid={{invitation.uuid}}">Accept</a>/<a href="/decline/?uuid={{invitation.uuid}}">Decline</a>)
+                    {%endifequal%}
                     {% ifequal invitation.status 1%}
                     <a href="/accept/?uuid={{invitation.uuid}}">Accepted</a>
                     {%endifequal%}
