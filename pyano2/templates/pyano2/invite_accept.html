@@ -82,7 +82,9 @@
 {% block custom_js %}
 <script>
     $(document).ready( function () {
-    $('#videos').DataTable();
+    $('#videos').DataTable({
+        "order": [[ 2, "asc" ]]
+    } );
 } );
 
 
