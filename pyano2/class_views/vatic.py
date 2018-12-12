@@ -25,8 +25,8 @@ class VATICIndexView(View):
             for wjob in wjobs:
                 if wjob.job.id == int(id):
                     assigned = True
-            if not assigned:
-                logging.debug('This user is not assigned to this job. Just go to the index page.')
+            if not assigned and not request.user.is_staff:
+                logging.debug('This user is not assigned to this job and this user is not admin. Just go to the index page.')
                 return redirect(to="/vatic/list")
         return render(request, template_name=self.template_name, context=context)
 
