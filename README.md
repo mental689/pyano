@@ -28,10 +28,28 @@ $ pip install -r requirements.txt
 $ source env.sh # please modify this if you want to install mysql-server in Ubuntu.
 ```
 
-## Basic uses
+Finally, you have to install [pyvision](https://github.com/cvondrick/pyvision) package of Carl Vondrick to have spatio-temporal functions to work.
 
-To be updated!
+## Basic usage
 
+### Update migrations
+
+In folder `pyano2/migrations/`, we leave sample migrations file to migrate the Django's database structure into a MySQL database.
+
+If you have any troubles, please remove all generated migrations in `pyano2/migrations/` and generate again by 
+
+```bash
+$ mysql # if you need to run as root: mysql -uroot -p
+mysql > CREATE DATABASE pyano2 CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+mysql > exit
+## Please modify your settings in pyano/settings.py to match your MySQL server settings.
+$ python3 manage.py makemigrations # to generate the migration files
+$ python3 manage.py migrate # to migrate your databases to pyano2 that we have created.
+```
+
+### Detailed documentation
+
+Please see [DOCUMENTATION](./DOCUMENTATION.md). But we don't explain again what are alreday in [Django's documentation](https://docs.djangoproject.com/en/2.1/) such as createing a superuser, where to access admin's page, etc.
 
 ## Demo
 
