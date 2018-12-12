@@ -1,15 +1,13 @@
 import logging
-from time import time
 
-from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views import View
 from survey.models import Video, VideoCategory
 from django.utils.html import escape
 
-from data.downloader.youtube import search_youtube, build_youtube_instance
-from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, User
+from pyano2.downloader.youtube import search_youtube, build_youtube_instance
+from pyano2.models import Topic, Keyword, SearchResult, SystemSetting
 
 
 class KeywordSearchView(View):

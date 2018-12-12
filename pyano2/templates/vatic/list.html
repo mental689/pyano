@@ -1,0 +1,24 @@
+{% extends 'pyano2/_base.html' %}
+
+{% block body %}
+<div class="section-top-border">
+    <h3 class="mb-30">List of jobs</h3>
+    <div class="progress-table-wrap">
+        <div class="progress-table">
+            <div class="table-head">
+                <div class="serial">#</div>
+                <div class="country">URL</div>
+                <div class="percentage">No. of assigned workers</div>
+            </div>
+            {% for job in jobs %}
+            <div class="table-row">
+                <div class="serial">{{ job.id }}</div>
+                <div class="country"><a href="/vatic?id={{job.id}}">
+                    /vatic?id={{job.id}}</a></div>
+                <div class="percentage">{{job.job2workers|length}}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
