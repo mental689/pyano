@@ -56,15 +56,19 @@ class InvitationView(View):
                 invitation.invited = None # If no record found, just put NULL into this field.
             invitation.save()
             try:
-                self.email(job_name, full_name, user, recipient_list, invitation.uuid, survey_id)
+                msg = form.cleaned_data.get('message')
+                self.email(job_name, full_name, user, recipient_list, invitation.uuid, survey_id, msg)
+                invitation.message = msg
+                invitation.save()
             except Exception as e:
                 return render(request, template_name=self.template_name, context={"form": form, "error": e})
             return redirect('/')
         return render(request, template_name=self.template_name, context={"form": form})
 
-    def email(self, job_name, full_name, user, recipient_list, uuid, survey_id):
+    def email(self, job_name, full_name, user, recipient_list, uuid, survey_id, msg):
         subject = '{} invitation for Shoplifting prevention project'.format(job_name)
-        message = 'Dear Dr. {},\n\n' \
+        if len(msg) == 0:
+            message = 'Dear Dr. {},\n\n' \
                   'I am {} {} from Shoplifting prevention project. ' \
                   'We are looking for a leading expert for the position {} of our project. ' \
                   'After a thorough checking, we believe that you are the best person to fit this position in ' \
@@ -90,6 +94,8 @@ class InvitationView(View):
                                  (datetime.datetime.now() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
                                  (datetime.datetime.now() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
                                  user.email, user.first_name, user.last_name)
+        else:
+            message = msg
         email_from = settings.EMAIL_HOST_USER
         send_mail(subject, message, email_from, recipient_list)
         return redirect('/')

@@ -57,6 +57,7 @@ class Invitation(models.Model):
     invitor = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='invitors')
     invited = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='invitees')
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE, blank=False, null=False, related_name='surveys')
+    message = models.TextField(blank=True, null=False, default='', auto_created=True, max_length=4096)
     uuid = models.CharField(_("Invitation unique identifier"), max_length=255, unique=True)
     done = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUSES, default=0)
