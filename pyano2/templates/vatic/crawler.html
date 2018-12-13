@@ -117,6 +117,10 @@
         $("body").addClass('loading');
         var vid = $('#videos option:selected').text();
         var id = $('#videos option:selected').val();
+        if ($('#labels').val() == '') {
+            alert("You have to provide labels");
+            return
+        }
         var posting = $.post(
             '/vatic/crawler/',
             {
@@ -130,8 +134,13 @@
 
         posting.done(function (data) {
             console.log(data);
+            if (data.status == 404) {
+                alert("There are some errors in server side: " + data.error);
+            } else {
+                alert("Video " + vid + " was successfully crawled into server.");
+            }
         }).fail(function (data) {
-            console.log('Error: ' + data);
+            alert("There are some errors in server side");
         }).always(function (data) {
             $("body").removeClass('loading');
         });

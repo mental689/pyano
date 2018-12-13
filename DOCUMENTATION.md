@@ -1,6 +1,8 @@
 PYANO 2
 ====
 
+![Pyano Site Map](./static/img/pyano_site_map.png)
+
 
 ## For users
 
