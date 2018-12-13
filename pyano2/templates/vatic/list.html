@@ -10,7 +10,7 @@
             <th>Group</th>
             <th>URL</th>
             <th>Point</th>
-            <th></th>
+            {% if not user.is_staff %}<th></th> {% endif %}
             {% if user.is_staff %}<th></th> {%endif%}
         </tr>
         </thead>
@@ -22,7 +22,7 @@
             <th><a href="/vatic?id={{job.id}}" target="_blank">
                 /vatic?id={{job.id}}</a></th>
             <th>{{job.group.cost.point}}</th>
-            <th><a href="/vatic/bid?id={{job.id}}" target="_blank">Bid this job</a> </th>
+            {% if not user.is_staff %}<th><a href="/vatic/bid?id={{job.id}}" target="_blank">Bid this job</a> </th>{% endif %}
             {% if user.is_staff %}<th><a href="/vatic/finalize?id={{job.id}}">Finalize</a></th> {%endif%}
         </tr>
         {% endfor %}
