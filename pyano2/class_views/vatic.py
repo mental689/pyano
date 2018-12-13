@@ -393,6 +393,8 @@ class VATICCrawlerView(View):
                 context['group'] = group
                 videos = Video.objects.annotate(num_responses=Count('responses'))
                 videos = videos.filter(num_responses__gt=0)
+                videos = videos.annotate(num_locks=Count('bans'))
+                videos = videos.filter(num_locks=0)
                 context['videos'] = videos
             else:
                 context['error'] = 'No group found.'
@@ -414,8 +416,17 @@ class VATICCrawlerView(View):
                 return JsonResponse({'status': 404, 'error': 'No group'})
             else:
                 group = groups[0]
+            videos = Video.objects.filter(id=id)
+            # Check if the video is locked or not
+            if len(videos) > 0:
+                locks = BannedVideo.objects.filter(video=videos[0])
+                if len(locks) > 0:
+                    return JsonResponse({'status': 404, 'error': 'Locked videos'})
+            else:
+                return JsonResponse({'status': 404, 'error': 'No video found'})
             download_youtube_video(youtube_ids=[vid],
                                    output_folder=os.path.join(pyano_settings.BASE_DIR, 'static/videos'))
+
             files = glob(os.path.join(pyano_settings.BASE_DIR, 'static/videos/{}'.format(request.POST.get('vid'))) + '.*')
             if len(files) > 0:
                 f = files[0]
@@ -428,6 +439,12 @@ class VATICCrawlerView(View):
                                      labels=labels,
                                      pyano_video_id=id)
                 loader(group)
+            # After having all of this process done, we should lock the video to prevent downloading again.
+            if len(videos) > 0:
+                lock = BannedVideo()
+                lock.video = videos[0]
+                lock.why = 1
+                lock.save()
         except Exception as e:
             return JsonResponse({'status': 404, 'error': e})
         return JsonResponse({'status': 200})
