@@ -119,6 +119,7 @@
         var id = $('#videos option:selected').val();
         if ($('#labels').val() == '') {
             alert("You have to provide labels");
+            $("body").removeClass('loading');
             return
         }
         var posting = $.post(
