@@ -364,4 +364,19 @@ class VATICBid(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+BAN_REASONS = (
+    (1, _("Downloaded")),
+    (2, _("Irrelevant")),
+    (3, _("Bad quality")),
+    (4, _("Duplicated or not novel"))
+)
+
+
+class BannedVideo(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=False, related_name='bans')
+    why = models.IntegerField(choices=BAN_REASONS, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 # TODO: think about bonuses
