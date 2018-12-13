@@ -96,16 +96,16 @@ class VATICVideo(models.Model):
     skip = models.IntegerField(default=0, null=False)
     perobjectbonus = models.FloatField(default=0)
     completionbonus = models.FloatField(default=0)
-    # trainwith = models.ForeignKey("VATICVideo", null=True, on_delete=models.CASCADE)
     pyano_video = models.ForeignKey(Video, related_name='vaticvideos', null=True, on_delete=models.CASCADE)
     isfortraining = models.BooleanField(default=False)
     blowradius = models.IntegerField(default=5)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def getframepath(self, frame, base=None):
-        l1 = frame / 10000
-        l2 = frame / 100
+    @staticmethod
+    def getframepath(frame, base=None):
+        l1 = int(frame / 10000)
+        l2 = int(frame / 100)
         path = "{0}/{1}/{2}.jpg".format(l1, l2, frame)
         if base is not None:
             path = "{0}/{1}".format(base, path)
@@ -113,21 +113,21 @@ class VATICVideo(models.Model):
 
     def cost(self):
         cost = 0
-        for segment in self.segments:
+        for segment in self.segments.all():
             cost += segment.cost
         return cost
 
     def numjobs(self):
         count = 0
-        for segment in self.segments:
-            for job in segment.jobs:
+        for segment in self.segments.all():
+            for job in segment.jobs.all():
                 count += 1
         return count
 
     def numcompleted(self):
         count = 0
-        for segment in self.segments:
-            for job in segment.jobs:
+        for segment in self.segments.all():
+            for job in segment.jobs.all():
                 if job.completed:
                     count += 1
         return count
@@ -162,14 +162,14 @@ class VATICSegment(models.Model):
 
     def paths(self):
         paths = []
-        for job in self.jobs:
+        for job in self.jobs.all():
             if job.useful:
                 paths.extend(job.paths)
         return paths
 
     def cost(self):
         cost = 0
-        for job in self.jobs:
+        for job in self.jobs.all():
             cost += job.cost
         return cost
 
@@ -185,13 +185,6 @@ class VATICJobGroup(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-VATICJOB_STATUSES = (
-    (0, _("Not decided")),
-    (1, _("Accepted")),
-    (2, _("Rejected")),
-)
-
-
 class VATICJob(models.Model):
     segment = models.ForeignKey(VATICSegment, related_name='jobs', on_delete=models.CASCADE, help_text=_('Segment'))
     istraining = models.BooleanField(default=False, help_text=_('Is this job for training?'))
@@ -199,9 +192,8 @@ class VATICJob(models.Model):
     completed = models.BooleanField(default=False, help_text=_('Is the job completed?'))
     paid = models.BooleanField(default=False, help_text=_('Is the annotator paid?'))
     published = models.BooleanField(default=False, help_text=_('Is this published?'))
-    status = models.IntegerField(choices=VATICJOB_STATUSES, default=0, help_text=_('Status'))
+    ready = models.BooleanField(default=False, help_text=_('Whether if the job is ready.'))
     bonus = models.FloatField(default=0, help_text=_('Bonus'))
-    # worker = models.ForeignKey(User, related_name='jobs', on_delete=models.CASCADE, help_text=_('Worker'))
     uuid = models.CharField(_("Job unique identifier"), max_length=255, unique=True, help_text=_('UUID'))
     training_overlap = models.FloatField(default=0.25, null=False)
     training_tolerance = models.FloatField(default=0.2, null=False)
@@ -356,9 +348,19 @@ class VATICTrainingOf(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class VATICWorkerJob(models.Model):
     worker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='worker2jobs')
     job = models.ForeignKey(VATICJob, on_delete=models.CASCADE, related_name='job2workers')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class VATICBid(models.Model):
+    candidate = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')
+    job = models.ForeignKey(VATICJob, on_delete=models.CASCADE, related_name='bids')
+    approved = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='approved_bids', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

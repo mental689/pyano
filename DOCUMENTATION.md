@@ -8,13 +8,13 @@ PYANO 2
 
 #### Search for videos
 
-For everyone
+For authenticated users
 
 ### Survey
 
 #### Find a survey job
 
-For everyone
+For authenticated users
 
 #### Complete a survey job
 
@@ -32,7 +32,7 @@ For reviewers
 
 #### Find a STA job
 
-For everyone
+For authenticated users
 
 #### Accept/reject an STA assignment invitation
 

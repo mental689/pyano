@@ -22,10 +22,10 @@ JOB_CHOICES = (
 
 
 class InviteReviewerAnnotatorForm(forms.Form):
-    surveys = Survey.objects.filter(is_published=True)
+    # surveys = Survey.objects.filter(is_published=True)
     SURVEY_CHOICES = []
-    for survey in surveys:
-        SURVEY_CHOICES.append((survey.id, survey.name))
+    # for survey in surveys:
+    #     SURVEY_CHOICES.append((survey.id, survey.name))
     SURVEY_CHOICES = tuple(SURVEY_CHOICES)
     name = forms.CharField(max_length=255, label="Target name", help_text=_("Full name"))
     job = forms.ChoiceField(label="Position to invite", choices=JOB_CHOICES, initial='', widget=forms.Select(), required=True)

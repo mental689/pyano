@@ -1,0 +1,20 @@
+{% extends 'pyano2/_base.html' %}
+
+{% block body %}
+<div class="col-lg-12 col-md-12 align-content-center">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <p>
+        {{ error }}. Please come and check again later!
+    </p>
+    {%else%}
+    {% if assigned %}
+    <h3 class="mb-30">You are already assigned to this job. You don't need to bid again.</h3>
+    {% elif user.is_staff %}
+    <h3 class="mb-30">You are a staff and you don't need to bid.</h3>
+    {% else %}
+    <h3 class="mb-30">Thank you very much. We will contact you after admin approval.</h3>
+    {% endif %}
+    {%endif%}
+</div>
+{% endblock %}

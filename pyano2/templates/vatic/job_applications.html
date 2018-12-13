@@ -1,0 +1,47 @@
+{% extends 'pyano2/_base.html' %}
+
+{% block body %}
+<div class="col-lg-12 col-md-12 align-content-center">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <p>
+        {{ error }}. Please come and check again later!
+    </p>
+    {%else%}
+    <div class="col-lg-12">
+    <h3 class="mb-30">List of job applications</h3>
+    <table id="jobs">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Group</th>
+            <th>URL</th>
+            <th>Applicant</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for bid in bids %}
+        <tr>
+            <th>{{bid.id }}</th>
+            <th>{{bid.job.group.title}}</th>
+            <th><a href="/vatic?id={{bid.job.id}}" target="_blank">
+                /vatic?id={{bid.job.id}}</a></th>
+            <th>{{bid.candidate.first_name}} {{bid.candidate.last_name}} <<a href="mailto:{{bid.candidate.email}}">{{bid.candidate.email}}</a>> </th>
+            <th><a href="/vatic/approve_bid/?id={{bid.id}}" target="_blank">Approve this bid</a> </th>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    {%endif%}
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function () {
+        $('#jobs').DataTable();
+    });
+</script>
+{% endblock %}

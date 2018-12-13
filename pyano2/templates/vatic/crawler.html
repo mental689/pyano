@@ -1,0 +1,133 @@
+{% extends 'pyano2/_base.html' %}
+
+{% block body %}
+<div class="text-justify">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <div class="row"><p>
+        {{ error }}. Please come and check again later!
+    </p></div>
+    {%else%}
+    <h3 class="mb-30">Crawler</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="section-top-border">
+                <h3 class="mb-30">Video</h3>
+                <p>You can choose a video from the below dropdown and crawl a video.</p>
+                <form>
+                    <input type="hidden" value="{{gid}}" id="gid">
+                    <div class="default-select">
+                        <select id="videos">
+                            {%for video in videos%}
+                            <option value="{{video.id}}">{{video.vid}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                    <div class="mt-10">
+                        <input type="text" class="single-input" placeholder="Labels separated by comma."
+                               onfocus="this.placeholder = ''" onblur="this.placeholder = 'Labels separated by comma.'"
+                               id="labels"></input>
+                    </div>
+                    <div class="mt-10">
+                        <input type="button" value="Crawl this video" onclick="crawl();"
+                               class="genric-btn default radius">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6" id="youtube_canvas">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{video.vid}}" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+    {%endif%}
+    <div class="section-top-border" id="survey_answers">
+        <h3 class="mb-30">Responses</h3>
+        <div class="row" >
+            <!--<div class="col-lg-12">-->
+                <!--<h4 class="mb-40">By ubuntu</h4>-->
+                <!--<blockquote class="generic-blockquote">-->
+                    <!--<h4 class="mb-40"><b>Question:</b></h4>-->
+                    <!--<p><b>Answer:</b></p>-->
+                <!--</blockquote>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(window).load(function () {
+        var vid = $('#videos option:selected').val();
+        load_answers(vid);
+    });
+
+    $('#videos').change(function () {
+        $('#youtube_canvas').html(
+            '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + $('#videos option:selected').text() + '" frameborder="0"\n' +
+            '                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"\n' +
+            '                    allowfullscreen></iframe>'
+        );
+        var vid = $('#videos option:selected').val();
+        load_answers(vid);
+    });
+
+    function load_answers(vid) {
+        $('#survey_answers').html('<p>Loading answers for this video ...</p>');
+        var posting = $.post(
+            '/video/answer/' + vid + '/',
+            {
+                'csrfmiddlewaretoken': $.cookie("csrftoken"),
+            }
+        );
+        var html = '';
+        posting.done(function (data) {
+            var answers = data.answers;
+            var html_ = '<div class="row" ><div class="col-lg-12">';
+            for (var k in answers) {
+                var v = answers[k];
+                var uname = v.uname;
+                html_ += '<h4 class="mb-40">By ' + uname + '</h4>';
+                html_ += '<blockquote class="generic-blockquote">';
+                var questions = v.questions;
+                for (var i in questions) {
+                    var q = questions[i];
+
+                    html_ += '<h4 class="mb-40">' + q.question + '</h4>';
+                    html_ += '<p>Answer: ' + q.answer + '</p>';
+
+                }
+                html_ += '</blockquote>';
+            }
+            html += html_ + '</div></div>';
+            $('#survey_answers').html(html);
+        }).fail(function (data) {
+            $('#survey_answers').html('<p>Failed to load answers for this video.</p>')
+        });
+    }
+
+    function crawl() {
+        console.log('Clicked');
+        var vid = $('#videos option:selected').text();
+        var id = $('#videos option:selected').val();
+        var posting = $.post(
+            '/vatic/crawler/',
+            {
+                'vid': vid,
+                'id': id,
+                'gid': $('#gid').val(),
+                'csrfmiddlewaretoken': $.cookie("csrftoken"),
+                'labels': $('#labels').val()
+            }
+        );
+
+        posting.done(function (data) {
+            console.log(data);
+        }).fail(function (data) {
+            console.log('Error: ' + data);
+        });
+    }
+</script>
+{% endblock %}

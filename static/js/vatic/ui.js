@@ -425,9 +425,9 @@ function ui_loadprevious(job, objectui)
 
         for (var i in data.result)
         {
-            objectui.injectnewobject(data[i]["label"],
-                                     data[i]["boxes"],
-                                     data[i]["attributes"]);
+            objectui.injectnewobject(data.result[i]["label"],
+                                     data.result[i]["boxes"],
+                                     data.result[i]["attributes"]);
         }
     });
 }

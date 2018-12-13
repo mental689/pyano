@@ -20,6 +20,7 @@ The following three activities will be modeled in this project:
 * Python 3.6+
 * pip 9.0+
 * MySQL 5.7+
+* FFmpeg 4.1+
 
 To install the remaining requirements:
 

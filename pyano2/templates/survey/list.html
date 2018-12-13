@@ -8,15 +8,17 @@
         <div class="progress-table">
             <div class="table-head">
                 <div class="serial">#</div>
-                <div class="country">Survey</div>
+                <div class="percentage">Survey</div>
                 <div class="visit">Questions</div>
+                <div class="country">Points you can earn</div>
             </div>
             {% for survey in surveys %}
             <div class="table-row">
                 <div class="serial">{{ survey.id }}</div>
-                <div class="country"><a href="{{ survey.get_absolute_url }}">
+                <div class="percentage"><a href="{{ survey.get_absolute_url }}">
                     {{survey.name}}</a></div>
                 <div class="visit">{{ survey.num_questions }}</div>
+                <div class="country">{% for credit in survey.points.all %} {{credit.point}} {%endfor%}</div>
             </div>
             {% endfor %}
         </div>

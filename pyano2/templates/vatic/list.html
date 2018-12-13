@@ -1,24 +1,40 @@
 {% extends 'pyano2/_base.html' %}
 
 {% block body %}
-<div class="section-top-border">
+<div class="col-lg-12">
     <h3 class="mb-30">List of jobs</h3>
-    <div class="progress-table-wrap">
-        <div class="progress-table">
-            <div class="table-head">
-                <div class="serial">#</div>
-                <div class="country">URL</div>
-                <div class="percentage">No. of assigned workers</div>
-            </div>
-            {% for job in jobs %}
-            <div class="table-row">
-                <div class="serial">{{ job.id }}</div>
-                <div class="country"><a href="/vatic?id={{job.id}}">
-                    /vatic?id={{job.id}}</a></div>
-                <div class="percentage">{{job.job2workers|length}}</div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+    <table id="jobs">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Group</th>
+            <th>URL</th>
+            <th>Point</th>
+            <th></th>
+            {% if user.is_staff %}<th></th> {%endif%}
+        </tr>
+        </thead>
+        <tbody>
+        {% for job in jobs %}
+        <tr>
+            <th>{{job.id }}</th>
+            <th>{{job.group.title}}</th>
+            <th><a href="/vatic?id={{job.id}}" target="_blank">
+                /vatic?id={{job.id}}</a></th>
+            <th>{{job.group.cost.point}}</th>
+            <th><a href="/vatic/bid?id={{job.id}}" target="_blank">Bid this job</a> </th>
+            {% if user.is_staff %}<th><a href="/vatic/finalize?id={{job.id}}">Finalize</a></th> {%endif%}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function () {
+        $('#jobs').DataTable();
+    });
+</script>
 {% endblock %}

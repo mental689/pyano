@@ -1,0 +1,14 @@
+{% extends 'pyano2/_base.html' %}
+
+{% block body %}
+<div class="col-lg-12 col-md-12 align-content-center">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <p>
+        {{ error }}. Please come and check again later!
+    </p>
+    {%else%}
+    <h3 class="mb-30">You approved the bid: /vatic?id={{bid.job.id}} to {{bid.candidate}}.</h3>
+    {%endif%}
+</div>
+{% endblock %}
