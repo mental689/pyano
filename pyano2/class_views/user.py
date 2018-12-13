@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 from survey.models import *
-from pyano2.models import Invitation, Credit
+from pyano2.models import *
 
 from pyano2.forms import SignUpForm
 
@@ -56,6 +56,11 @@ class ProfileView(View):
                 if response.survey == credit.survey:
                     total_credits += credit.point
                     break
+        # Give the user who did the VATIC job points (credits)
+        assigments = VATICWorkerJob.objects.filter(worker=request.user).all()
+        for assigment in assigments:
+            if assigment.job.completed:
+                total_credits += assigment.job.cost()
         context['gained_credits'] = total_credits
         return render(request, template_name=self.template_name, context=context)
 
