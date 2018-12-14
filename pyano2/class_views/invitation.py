@@ -67,8 +67,7 @@ class InvitationView(View):
 
     def email(self, job_name, full_name, user, recipient_list, uuid, survey_id, msg):
         subject = '{} invitation for Shoplifting prevention project'.format(job_name)
-        if len(msg) == 0:
-            message = 'Dear Dr. {},\n\n' \
+        default_msg = 'Dear Dr. {},\n\n' \
                   'I am {} {} from Shoplifting prevention project. ' \
                   'We are looking for a leading expert for the position {} of our project. ' \
                   'After a thorough checking, we believe that you are the best person to fit this position in ' \
@@ -94,8 +93,11 @@ class InvitationView(View):
                                  (datetime.datetime.now() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
                                  (datetime.datetime.now() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
                                  user.email, user.first_name, user.last_name)
+        if len(msg) == 0:
+            message = default_msg
         else:
-            message = msg
+            message = msg + '\n\n' + default_msg
+
         email_from = settings.EMAIL_HOST_USER
         send_mail(subject, message, email_from, recipient_list)
         return redirect('/')
