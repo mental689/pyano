@@ -121,7 +121,7 @@ class AcceptInvitationView(View):
                 context = {'error': 'You declined this invitation in the past! '
                                     'Please contact your invitor if you changed your mind!', 'uuid': uuid}
                 return render(request, template_name=self.template_name, context=context)
-            if now() - invitation.created > timedelta(+7):
+            if now() - invitation.created > timedelta(+7) and invitation.status != 1:
                 context = {'error': 'The invitation has been expired! '
                                     'Please contact your invitor if you changed your mind!', 'uuid': uuid}
                 invitation.done = False # expired but not done
@@ -177,7 +177,6 @@ class AcceptInvitationView(View):
                                                           invitation.survey.get_absolute_url())
         email_from = settings.EMAIL_HOST_USER
         send_mail(subject, message, email_from, [invitation.invitor.email])
-
 
 
 class DeclineInvitationView(View):

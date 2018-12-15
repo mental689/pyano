@@ -168,6 +168,9 @@
                     {%ifequal invitation.status 2%}
                     Declined
                     {%endifequal%}
+                    {%ifequal invitation.status 3%}
+                    Expired
+                    {%endifequal%}
                 </th>
             </tr>
             {% endfor %}
