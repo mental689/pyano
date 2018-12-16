@@ -11,5 +11,9 @@
             <button class="btn btn-default btn-lg btn-block text-center text-uppercase" type="submit">Login</button>
         </div>
     </form>
+    <p><a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a></p>
+    <p><a href="{% url 'social:begin' 'github' %}">Login with GitHub</a><br></p>
+    <p><a href="{% url 'social:begin' 'twitter' %}">Login with Twitter</a></p>
+    <!--<p><a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a></p>-->
 </div>
 {% endblock %}

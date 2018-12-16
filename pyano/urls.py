@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^accounts/logout/', auth_views.LogoutView.as_view(), name="logout"),
     url(r'^accounts/profile/', ProfileView.as_view(), name="profile"),
     url(r'^register/', RegisterView.as_view(), name="register"),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),  # <--
     url(r'^', include('pyano2.urls')),
 ]
 
