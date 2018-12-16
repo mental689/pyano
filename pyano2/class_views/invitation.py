@@ -14,6 +14,7 @@ from pyano2.forms import InviteReviewerAnnotatorForm
 from pyano2.models import Invitation, Alternative
 from survey.models import Survey, Video
 from django.contrib.auth.models import User
+from pyano.settings import SHOPLIFT_DOMAIN
 
 
 class InvitationView(View):
@@ -77,10 +78,10 @@ class InvitationView(View):
                   'As a Reviewer, you will have to use your expertise to guide the annotator to learn how to annotate a video, then after the instruction, ' \
                   'annotators can annotate a large number of videos by themselves. ' \
                   'You need to register an account and login to see the contents in following URLs.\n\n' \
-                  'For specific guidelines, please feel free to confirm the guideline at: http://13.58.121.50:8000/survey/{} \n\n' \
-                  'To Accept this invitation, please head to http://13.58.121.50:8000/accept/?uuid={}. ' \
+                  'For specific guidelines, please feel free to confirm the guideline at: http://{}:8000/survey/{} \n\n' \
+                  'To Accept this invitation, please head to http://{}:8000/accept/?uuid={}. ' \
                   'If you do not have an account, the above link will guide you to create one. ' \
-                  'If you are busy or having some reasons not to accept this job, please head to http://13.58.121.50:8000/decline/?uuid={} to decline the job offer. ' \
+                  'If you are busy or having some reasons not to accept this job, please head to http://{}:8000/decline/?uuid={} to decline the job offer. ' \
                   'You will be asked for the reasons of decline and the names of alternatives. ' \
                   'We appreciate if you can recommend others to fulfill this position.\n\n' \
                   'Finally, thank you very much for spending time to look through this invitation. ' \
@@ -89,7 +90,7 @@ class InvitationView(View):
                   'If you want to correct your responses or having any further questions, please contact me at {}.\n\n' \
                   'Thank you very much,\n' \
                   '{} {}'.format(full_name, user.first_name, user.last_name, job_name,
-                                 survey_id, uuid, uuid,
+                                 SHOPLIFT_DOMAIN, survey_id, SHOPLIFT_DOMAIN, uuid, SHOPLIFT_DOMAIN, uuid,
                                  (datetime.datetime.now() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
                                  (datetime.datetime.now() + datetime.timedelta(days=7)).strftime('%Y-%m-%d'),
                                  user.email, user.first_name, user.last_name)
