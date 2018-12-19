@@ -1,0 +1,137 @@
+{% extends 'pyano2/_base.html' %}
+
+{% block body %}
+<div class="text-justify">
+    {% if error %}
+    <h3 class="mb-30">Oops, ...</h3>
+    <div class="row"><p>
+        {{ error }}. Please come and check again later!
+    </p></div>
+    {%else%}
+    <h3 class="mb-30">Search for relevant video (QBE)</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="section-top-border">
+                <h3 class="mb-30">Query</h3>
+                <p>You can choose a video from the below dropdown and see their relevant videos.</p>
+                <p>At the beginning, we don't have any video example at all, but after keyword search and crowdsourcing surveys, we somewhat find some reliable seeds (examples) to perform Query-by-Example (QBE).
+                This is where we will use QBE based search.</p>
+                <form>
+                    <input type="hidden" value="{{gid}}" id="gid">
+                    <div class="default-select">
+                        <select id="videos">
+                            {%for video in videos%}
+                            <option value="{{video.id}}">{{video.vid}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                    <div class="mt-10">
+                        <input type="button" value="Search for relevant videos" onclick="search_relevant();"
+                               class="genric-btn default radius">
+                        <input type="button" value="Add relevant videos to DB" onclick="add_relevant();"
+                               class="genric-btn default radius">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6" id="youtube_canvas">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{video.vid}}" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+    {%endif%}
+    <div class="section-top-border" id="relevant_videos">
+    </div>
+</div>
+<div class="modal"></div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $(window).load(function () {
+        search_relevant();
+    });
+
+    $('#videos').change(function () {
+        $('#youtube_canvas').html(
+            '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + $('#videos option:selected').text() + '" frameborder="0"\n' +
+            '                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"\n' +
+            '                    allowfullscreen></iframe>'
+        );
+    });
+
+    function search_relevant() {
+        console.log('Clicked');
+        $("body").addClass('loading');
+        var vid = $('#videos option:selected').text();
+        var id = $('#videos option:selected').val();
+        if ($('#labels').val() == '') {
+            alert("You have to provide labels");
+            $("body").removeClass('loading');
+            return
+        }
+        var posting = $.post(
+            '/qbe_search/',
+            {
+                'vid': vid,
+                'id': id,
+                'gid': $('#gid').val(),
+                'csrfmiddlewaretoken': $.cookie("csrftoken"),
+            }
+        );
+
+        posting.done(function (data) {
+            console.log(data);
+            if (data.status == 404) {
+                alert("There are some errors in server side: " + data.error);
+            } else {
+                console.log("Related videos of video " + vid + " was successfully searched.");
+            }
+        }).fail(function (data) {
+            alert("There are some errors in server side: " + data);
+        }).always(function (data) {
+            $('#relevant_videos').html();
+            for (var i = 0; i < data.results.length; ++i) {
+                var v = data.results[i];
+                $('#relevant_videos').append('<iframe width="560" height="315" src="https://www.youtube.com/embed/' + v.id.videoID + '" frameborder="0"' +
+                    '                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"' +
+                    '                    allowfullscreen></iframe></br>')
+            }
+            $("body").removeClass('loading');
+        });
+    }
+</script>
+{% endblock %}
+
+{% block header_css_custom %}
+<style>
+    /* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, .5) url('http://sampsonresume.com/labs/pIkfp.gif') 50% 50% no-repeat;
+    }
+
+    /* When the body has the loading class, we turn
+       the scrollbar off with overflow:hidden */
+    body.loading {
+        overflow: hidden;
+    }
+
+    /* Anytime the body has the loading class, our
+       modal element will be visible */
+    body.loading .modal {
+        display: block;
+    }
+</style>
+{% endblock %}

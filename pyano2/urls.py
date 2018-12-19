@@ -7,11 +7,13 @@ from pyano2.class_views.invitation import InvitationView, AcceptInvitationView, 
 from pyano2.class_views.vatic import VATICIndexView, VATICJobView, VATICBoxesForJobView, \
     VATICValidateJobView, VATICSaveJobView, VATICListView, VATICBidJobView, VATICListJobApplicationView, \
     VATICApproveBidView, VATICFinalizeJobView, VATICCrawlerView, VideoAnswerView
+from pyano2.class_views.qbe_search import QBEVideoSearchView
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
     # path('about/', Aboutview.as_view(), name='about'),
     path('keyword_search/', KeywordSearchView.as_view(), name="keyword_search"),
+    path('qbe_search/', QBEVideoSearchView.as_view(), name='qbe_search'),
     path('invite/', InvitationView.as_view(), name="invitation"),
     path('accept/', AcceptInvitationView.as_view(), name="accept_invitation"),
     path('decline/', DeclineInvitationView.as_view(), name='decline_invitation'),

@@ -81,7 +81,7 @@ def get_video_details(youtube, video_id):
     try:
         results = videos.list(
             id=video_id,
-            part="contentDetails"
+            part="contentDetails,snippet,statistics"
         ).execute(num_retries=5)
         if "pageInfo" in results and "items" in results and "totalResults" in results["pageInfo"]:
             if results["pageInfo"]["totalResults"] == 0 or len(results["items"]) == 0:
@@ -120,7 +120,10 @@ def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True
             videoDefinition=videoDefinition,
             videoLicense=videoLicense,
             videoDuration=duration_type,
-            order="relevance"
+            order="relevance",
+            eventType="completed", # only search for completed events only
+            videoEmbeddable="true",
+            videoSyndicated="true"
         ).execute()
     except HttpError as e:
         logger.error("Error while downloading first response ...")
@@ -169,6 +172,78 @@ def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True
                     if details is not None and "contentDetails" in details and \
                             "definition" in details["contentDetails"]:
                         if (details["contentDetails"]["definition"] != "hd" and download_high_quality):
+                            continue
+                        else:
+                            logger.debug("Accepted {} ...".format(r["id"]["videoId"]))
+                            videos.append(r)
+        else:
+            for r in responses["items"]:
+                videos.append(r)
+    return videos
+
+
+def search_qbe(youtube, vid, check_in_details=False, hd_only=False):
+    try:
+        searcher = youtube.search()
+    except Exception as e:
+        logger.error(e)
+        return []
+    # first request
+    videos = []
+    logger.debug("============= Downloading first response ...")
+    try:
+        responses = searcher.list(
+            relatedToVideoId=vid,
+            maxResults=50,
+            type="video",
+            part="id,snippet",
+        ).execute()
+    except HttpError as e:
+        logger.error("Error while downloading first response ...")
+        logger.error(e)
+        return videos
+    logger.debug("Found {} records ...".format(responses["pageInfo"]["totalResults"]))
+    if check_in_details:
+        for r in responses["items"]:
+            if "id" in r and "videoId" in r["id"]:
+                details = get_video_details(youtube, video_id=r["id"]["videoId"])
+                if details is not None and "contentDetails" in details and \
+                        "definition" in details["contentDetails"]:
+                    if (details["contentDetails"]["definition"] != "hd" and hd_only):
+                        continue
+                    else:
+                        logger.debug("Accepted {} ...".format(r["id"]["videoId"]))
+                        videos.append(r)
+    else:
+        for r in responses["items"]:
+            videos.append(r)
+    count = 1
+    while "nextPageToken" in responses:
+        pageToken = responses["nextPageToken"]
+        if "previousPageToken" in responses and responses["previousPageToken"] == pageToken:
+            break
+        if len(responses) <= 50 * count:
+            break
+        count += 1
+        logger.debug("============= Downloading {}-th response with token {} ...".format(count, pageToken))
+        try:
+            responses = searcher.list(
+                relatedToVideoId=vid,
+                maxResults=50,
+                type="video",
+                part="id,snippet",
+            ).execute()
+        except HttpError as e:
+            logger.error("Error while downloading {}-th response ...".format(count))
+            logger.error(e)
+            return videos
+        if check_in_details:
+            for r in responses["items"]:
+                if "id" in r and "videoId" in r["id"]:
+                    details = get_video_details(youtube, video_id=r["id"]["videoId"])
+                    if details is not None and "contentDetails" in details and \
+                            "definition" in details["contentDetails"]:
+                        if (details["contentDetails"]["definition"] != "hd" and hd_only):
                             continue
                         else:
                             logger.debug("Accepted {} ...".format(r["id"]["videoId"]))
