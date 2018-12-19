@@ -11,3 +11,4 @@ munkres
 Pillow
 Cython==0.29.1
 social-auth-app-django
+git+https://github.com/idlesign/django-sitemessage
