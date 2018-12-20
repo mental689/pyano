@@ -7,7 +7,7 @@ from survey.models import Video, VideoCategory
 from django.utils.html import escape
 
 from pyano2.downloader.youtube import search_youtube, build_youtube_instance
-from pyano2.models import Topic, Keyword, SearchResult, SystemSetting
+from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, FreebaseTopic
 
 
 class KeywordSearchView(View):
@@ -80,6 +80,20 @@ class KeywordSearchView(View):
         freebaseid = request.POST.get("freebaseid")
         topics = Topic.objects.filter(id=topic_id)
         topic = topics[0]
+        if freebaseid != "":
+            found = False
+            for freebase in topic.freebases.all():
+                if freebase.gid == freebaseid:
+                    found = True
+                    break
+            if not found:
+                try:
+                    f = FreebaseTopic()
+                    f.gid = freebaseid
+                    f.pyanoTopic = topic
+                    f.save()
+                except Exception as e:
+                    logging.error(e)
         hd, cc, duration = False, False, "any"
         pref = []
         if request.POST.get("pref_hd"):
