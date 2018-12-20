@@ -24,13 +24,13 @@ class KeywordSearchView(View):
             logging.error(e)
             return None
 
-    def _search_youtube(self, keyword, user, topic, pref, cc=True, hd=False, duration="any"):
+    def _search_youtube(self, keyword, user, topic, freebaseid, pref, cc=True, hd=False, duration="any"):
         k = keyword.strip()
         dev_key = self._get_dev_key()
         if dev_key is None:
             return None
         yt = build_youtube_instance(dev_key)
-        results = search_youtube(youtube=yt, q=keyword, download_cc_only=cc, download_high_quality=hd, duration_type=duration)
+        results = search_youtube(youtube=yt, q=keyword, download_cc_only=cc, download_high_quality=hd, duration_type=duration, freebase_topic_id=freebaseid)
         # insert data
         keys = Keyword.objects.filter(topic__id=topic.id, content=keyword, user__id=user.id)
         if len(keys) == 0:
@@ -77,6 +77,7 @@ class KeywordSearchView(View):
         #     user.username = "Guest_{}".format(time())
         #     user.save()
         topic_id = request.POST.get("topic")
+        freebaseid = request.POST.get("freebaseid")
         topics = Topic.objects.filter(id=topic_id)
         topic = topics[0]
         hd, cc, duration = False, False, "any"
@@ -95,6 +96,7 @@ class KeywordSearchView(View):
                 continue
             record = self._search_youtube(keyword=keyword,
                                           topic=topic,
+                                          freebaseid=freebaseid,
                                           user=user,
                                           pref=pref,
                                           hd=hd, cc=cc, duration=duration)

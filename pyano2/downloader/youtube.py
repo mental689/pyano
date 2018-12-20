@@ -100,7 +100,7 @@ def check_details(details, check_words=["fake", "fool", "troll"], check_rating=T
     pass
 
 
-def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True, check_in_details=False, duration_type="any"):
+def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True, check_in_details=False, duration_type="any", freebase_topic_id="/m/01hrs3"):
     try:
         searcher = youtube.search()
     except Exception as e:
@@ -123,7 +123,8 @@ def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True
             order="relevance",
             eventType="completed", # only search for completed events only
             videoEmbeddable="true",
-            videoSyndicated="true"
+            videoSyndicated="true",
+            topicId=freebase_topic_id,
         ).execute()
     except HttpError as e:
         logger.error("Error while downloading first response ...")
@@ -159,7 +160,8 @@ def search_youtube(youtube, q, download_cc_only=True, download_high_quality=True
                 videoLicense=videoLicense,
                 pageToken=pageToken,
                 videoDuration=duration_type,
-                order="relevance"
+                order="relevance",
+                topicId=freebase_topic_id,
             ).execute()
         except HttpError as e:
             logger.error("Error while downloading {}-th response ...".format(count))
