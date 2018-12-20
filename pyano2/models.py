@@ -17,6 +17,12 @@ class Topic(models.Model): # topics will be added by admins
     created = models.DateTimeField(auto_created=True, default=now, blank=False, null=False)
     updated = models.DateTimeField(auto_now=True)
 
+class FreebaseTopic(models.Model):
+    googleId = models.CharField(max_length=32, default="/m/01hrs3") # default value is for shoplifting
+    pyanoTopic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="freebases", null=False)
+    created = models.DateTimeField(auto_created=True, default=now, blank=False, null=False)
+    updated = models.DateTimeField(auto_now=True)
+
 class Keyword(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='keywords', null=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='keywords', null=True)
