@@ -28,6 +28,9 @@
             Please follow the URL <a href="{{ video.url }}">here</a> to watch the video content.
             {% endif %}
             <input type="hidden" id="videoID" name="videoID" value="{{ video.id }}">
+            <div>
+                <a href="javascript:void(0);" onclick="block_channel();">Block this channel?</a>
+            </div>
         </div>
         {% for category in categories %}
         <h3> {{category}} </h3>
@@ -65,4 +68,26 @@
             >
     </form>
 </div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    function block_channel() {
+        var vid = $('#videoID').val();
+        console.log("staring blocking the channel of the video with id: " + vid);
+        $.post(
+            '/channel/block/',
+            {
+                'id': vid,
+                'csrfmiddlewaretoken': $.cookie("csrftoken"),
+            }
+        ).success(function (data) {
+            if (data.status == 404) {
+                alert("There was some errors on server");
+            } else {
+                alert("successfully blocked the channel of this video from your task");
+            }
+        });
+    }
+</script>
 {% endblock %}

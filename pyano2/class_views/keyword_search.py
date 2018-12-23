@@ -7,7 +7,7 @@ from survey.models import Video, VideoCategory
 from django.utils.html import escape
 
 from pyano2.downloader.youtube import search_youtube, build_youtube_instance
-from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, FreebaseTopic
+from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, FreebaseTopic, BlockedChannel
 
 
 class KeywordSearchView(View):
@@ -55,6 +55,10 @@ class KeywordSearchView(View):
                 v = Video()
                 v.url = "https://youtube.com/watch?v={}".format(r['id']['videoId'])
                 v.vid = r['id']['videoId']
+                v.channelId = r['snippet']['channelId']
+                blocks = BlockedChannel.objects.filter(channelId=v.channelId) # videos from blocked channels won't be added in to our database again.
+                if blocks.count() > 0:
+                    continue
                 v.cat = VideoCategory.objects.filter(id=1)[0]
                 v.type = 0
                 v.start = 0
@@ -83,7 +87,7 @@ class KeywordSearchView(View):
         if freebaseid != "":
             found = False
             for freebase in topic.freebases.all():
-                if freebase.gid == freebaseid:
+                if freebase.googleId == freebaseid:
                     found = True
                     break
             if not found:

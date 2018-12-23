@@ -9,6 +9,7 @@ from survey.models import Survey, Video
 from vision.track.interpolation import LinearFill
 
 from pyano2.vatic.qa import tolerable
+from pyano2.downloader.youtube import *
 
 
 # For keyword search
@@ -387,3 +388,26 @@ class BannedVideo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 # TODO: think about bonuses
+
+
+class BlockedChannel(models.Model):
+    channelId = models.CharField(max_length=255, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(BlockedChannel, self).save(force_insert, force_update, using, update_fields)
+        # Block all videos from this channel
+        videos = Video.objects.filter(channelId=self.channelId)
+        for video in videos:
+            try:
+                new_blocked_video = BannedVideo()
+                new_blocked_video.video = video
+                new_blocked_video.why = 2
+                new_blocked_video.save()
+            except:
+                pass
+
+
+

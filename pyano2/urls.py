@@ -8,6 +8,8 @@ from pyano2.class_views.vatic import VATICIndexView, VATICJobView, VATICBoxesFor
     VATICValidateJobView, VATICSaveJobView, VATICListView, VATICBidJobView, VATICListJobApplicationView, \
     VATICApproveBidView, VATICFinalizeJobView, VATICCrawlerView, VideoAnswerView
 from pyano2.class_views.qbe_search import QBEVideoSearchView
+from pyano2.class_views.lock_channel import LockChannelView
+
 
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
@@ -29,5 +31,6 @@ urlpatterns = [
     path('vatic/approve_bid/', VATICApproveBidView.as_view(), name='vatic_approve_bid'),
     path('vatic/finalize/', VATICFinalizeJobView.as_view(), name='vatic_finalize'),
     path('vatic/crawler/', VATICCrawlerView.as_view(), name='vatic_crawler'),
-    path('video/answer/<int:vid>/', VideoAnswerView.as_view(), name='video_answer')
+    path('video/answer/<int:vid>/', VideoAnswerView.as_view(), name='video_answer'),
+    path('channel/block/', LockChannelView.as_view(), name='lock_channel')
 ]

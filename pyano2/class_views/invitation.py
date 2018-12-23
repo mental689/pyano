@@ -132,6 +132,8 @@ class AcceptInvitationView(View):
             # get the number of videos
             videos = Video.objects.filter(cat=invitation.survey.video_cat)
             videos = videos.annotate(num_responses=Count('responses'))
+            videos = videos.annotate(num_bans=Count('bans'))
+            videos = videos.filter(num_bans=0)
             # search if invited target is already on the system
             if invitation.invited is None:
                 candidates = User.objects.filter(email=invitation.email)
