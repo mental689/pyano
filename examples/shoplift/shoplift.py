@@ -18,7 +18,7 @@ class ShopliftSummaryView(View):
     template_name = 'shoplift.html'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_staff:
+        if not request.user.is_staff:
             return render(request, template_name=self.template_name, context={'error': 'No permission.'})
         surveys = Survey.objects.filter(id=SHOPLIFT_SRUVERY_ID)
         if surveys.count() == 0:
