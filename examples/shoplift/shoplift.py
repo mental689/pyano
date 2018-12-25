@@ -1,20 +1,17 @@
-from django.utils.timezone import now, timedelta
-import datetime
-import uuid
-import logging
-
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.views import View
 from django.db.models import Count
-
-from pyano2.models import *
+from django.shortcuts import render
+from django.views import View
 from survey.models import *
-from django.contrib.auth.models import User
 
 SHOPLIFT_SRUVERY_ID=1
 
+
 class ShopliftSummaryView(View):
+    """
+    This example view will show an admin a selection view to choose
+    the videos which contain at least one crime scene (Shoplifting)
+    from a list of videos which have been answered by user.
+    """
     template_name = 'shoplift.html'
 
     def get(self, request, *args, **kwargs):
@@ -28,7 +25,7 @@ class ShopliftSummaryView(View):
             videos = Video.objects.filter(cat=survey.video_cat)\
                 .annotate(num_responses=Count('responses'))\
                 .annotate(num_bans=Count('bans'))\
-                .filter(num_bans=0).filter(num_responses_gt=0)
+                .filter(num_bans=0).filter(num_responses__gt=0)
             vids = []
             for v in videos:
                 p = 0.
