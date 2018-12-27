@@ -48,11 +48,22 @@
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
                     <li class="menu-active"><a href="/">Keyword search</a></li>
-                    <li class="menu-active"><a href="/survey">Surveys</a></li>
-                    <li class="menu-active"><a href="/invite">Invitations</a></li>
-                    <li class="menu-active"><a href="/vatic/list">VATIC</a></li>
-                    <li class="menu-has-children"><a href="{% if user.is_authenticated %}/accounts/profile{% else %}/accounts/login{% endif %}">
-                        Hello {% if user.is_authenticated %}{{ user }}{% else %}Guest{% endif %}</a>
+                    <li class="menu-has-children"><a href="javascript:void(0);">Surveys</a>
+			<ul>
+				<li class="menu-active"><a href="/survey">Surveys</a></li>
+				<li class="menu-active"><a href="/invite">Invite workers</a></li>
+			</ul>
+		    </li>
+                    <li class="menu-has-children"><a href="javascript:void(0);">VATIC</a>
+			<ul>
+				{% if user.is_staff %}
+				<li class="menu-active"><a href="/vatic/job_applications/">Bids</a></li>
+				<li class="menu-active"><a href="/vatic/list">Jobs</a></li>
+				{% endif %}
+			</ul>
+		    </li>
+                    <li class="menu-has-children"><a href="javascript:void(0);">
+                        {% if user.is_authenticated %}{{ user }}{% else %}Guest{% endif %}</a>
                         <ul>
                             {% if user.is_authenticated %}
                                 <li class="menu-active"><a href="/accounts/profile">Profile</a>
