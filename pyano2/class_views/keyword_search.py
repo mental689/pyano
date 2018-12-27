@@ -94,7 +94,7 @@ class KeywordSearchView(View):
                 try:
                     f = FreebaseTopic()
                     f.gid = freebaseid
-                    f.pyanoTopic = topic
+                    f.pyanoTopic.add(topic)
                     f.save()
                 except Exception as e:
                     logging.error(e)
