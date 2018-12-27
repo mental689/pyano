@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include
 from django.contrib.auth import views as auth_views
 from pyano2.class_views.user import RegisterView, ProfileView
-from examples.shoplift.shoplift import ShopliftSummaryView
+from examples.shoplift.shoplift import ShopliftSummaryView, QBESearchView
 
 from django.conf import settings
 
@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^register/', RegisterView.as_view(), name="register"),
     url(r'^oauth/', include('social_django.urls', namespace='social')),  # <--
     url(r'^examples/shoplift/', ShopliftSummaryView.as_view(), name='shoplift_example'),
+    url(r'^examples/qbe/', QBESearchView.as_view(), name='qbe_example'),
     url(r'^', include('pyano2.urls')),
 ]
 

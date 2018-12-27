@@ -1,15 +1,11 @@
-import json
-
-from django.shortcuts import render, redirect
 from django.conf import settings
-from django.views import View
-from survey.models import Video, VideoCategory
 from django.db.models import Count
 from django.http import JsonResponse
-
-from pyano2.downloader.youtube import build_youtube_instance, search_qbe
-from pyano2.models import *
+from django.shortcuts import render, redirect
+from django.views import View
 from survey.models import *
+
+from pyano2.models import *
 
 
 class QBEVideoSearchView(View):
