@@ -1,3 +1,7 @@
+/pyano2/migrations/
+/static/frames
+/static/videos
+/static/scss
 /pyano/settings.py
 /.idea
 **/*.log
