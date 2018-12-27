@@ -29,6 +29,7 @@ SHOPLIFT_DOMAIN = 'shoplift.pyano2.tk'
 
 ALLOWED_HOSTS = ['13.58.121.50', '127.0.0.1', SHOPLIFT_DOMAIN]
 
+SITE_ID = 1
 
 # Application definition
 
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites'
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrapform',
