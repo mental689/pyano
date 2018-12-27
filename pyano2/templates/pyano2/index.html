@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 ">
         <h2>Search for your Videos</h2>
-        <form action="/keyword_search/" method="post" id="search_form">
+        <form id="search_form">
             {% csrf_token %}
             <div class="single-element-widget">
                 <div class="mb-30">Please select one topic for the search (topics are added by admins):</div>
@@ -21,13 +21,14 @@
                 <input type="text" name="keywords" placeholder="Use comma to separate the keywords."
                        onfocus="this.placeholder = ''"
                        onblur="this.placeholder = 'Use comma to separate the keywords.'"
-                       required="" class="single-input">
+                       required="" class="">
             </div>
             <div class="single-element-widget">
-                <input type="text" name="freebaseid" placeholder="A Freebase topic ID. For e.g., /m/01hrs3 for shoplifting."
+                <input type="text" name="freebaseid"
+                       placeholder="A Freebase topic ID. For e.g., /m/01hrs3 for shoplifting."
                        onfocus="this.placeholder = ''"
                        onblur="this.placeholder = 'A Freebase topic ID. For e.g., /m/01hrs3 for shoplifting.'"
-                       required="" class="single-input">
+                       class="">
             </div>
             <div class="switch-wrap d-flex justify-content-between">
                 <p><a
@@ -55,7 +56,8 @@
                     <label for="long"></label>
                 </div>
             </div>
-            <div class=""><input type="submit" class="primary-btn text-uppercase" value="Search"></div>
+            <div class=""><input type="submit" class="primary-btn text-uppercase" value="Search"
+                                 onclick="keyword_search();"></div>
         </form>
     </div>
     <div class="col-lg-6 col-md-6 ">
@@ -83,4 +85,108 @@
         </ul>
     </div>
 </div>
+<div class="modal"></div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    $('input[name=keywords]').selectize({
+        plugins: ['remove_button', 'restore_on_backspace'],
+        delimiter: ',',
+        persist: false,
+        create: function (input) {
+            return {
+                value: input,
+                text: input
+            }
+        }
+    });
+    $('input[name=freebaseid]').selectize({
+        plugins: ['remove_button', 'restore_on_backspace'],
+        delimiter: ',',
+        persist: false,
+        maxItems: 1,
+        create: function (input) {
+            return {
+                value: input,
+                text: input
+            }
+        }
+    });
+
+    function keyword_search() {
+        $("body").addClass('loading');
+        var keywords = $('input[name=keywords]').val();
+        if (keywords === "") {
+            alert("You have to provide at least one keyword.")
+        }
+        var freebaseid = $('input[name=freebaseid]').val();
+        var tid = $('select[name=topic] option:selected').val();
+        var post_data = {
+                'keywords': keywords,
+                'csrfmiddlewaretoken': $.cookie("csrftoken"),
+                'topic': tid,
+                'freebaseid': freebaseid
+            };
+        if ($('#hd').is(':checked')) {
+            post_data['pref_hd'] = $('#pref_hd').val();
+        }
+        if ($('#cc').is(':checked')) {
+            post_data['pref_cc'] = $('#pref_cc').val();
+        }
+        if ($('#long').is(':checked')) {
+            post_data['pref_long'] = $('#pref_long').val();
+        }
+        var posting = $.post(
+            '/keyword_search/',
+            post_data
+        );
+
+        posting.done(function (data) {
+            console.log(data);
+            if (data.error !== null) {
+                alert("There are some errors in server side: " + data.error);
+            } else {
+                alert("Got " +  data.num_results + " search items and added to our database.");
+            }
+        }).fail(function (data) {
+            console.log(data);
+            alert("There are some errors in server side");
+        }).always(function (data) {
+            $("body").removeClass('loading');
+        });
+    }
+</script>
+{% endblock %}
+
+{% block header_css_custom %}
+<style>
+    /* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, .5) url('http://sampsonresume.com/labs/pIkfp.gif') 50% 50% no-repeat;
+    }
+
+    /* When the body has the loading class, we turn
+       the scrollbar off with overflow:hidden */
+    body.loading {
+        overflow: hidden;
+    }
+
+    /* Anytime the body has the loading class, our
+       modal element will be visible */
+    body.loading .modal {
+        display: block;
+    }
+</style>
 {% endblock %}

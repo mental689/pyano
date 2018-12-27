@@ -5,6 +5,7 @@ from django.conf import settings
 from django.views import View
 from survey.models import Video, VideoCategory
 from django.utils.html import escape
+from django.http import JsonResponse
 
 from pyano2.downloader.youtube import search_youtube, build_youtube_instance
 from pyano2.models import Topic, Keyword, SearchResult, SystemSetting, FreebaseTopic, BlockedChannel
@@ -74,13 +75,14 @@ class KeywordSearchView(View):
             return redirect(to="{}?next=/".format(settings.LOGIN_URL))
         logging.info(request.POST)
         keywords = request.POST.get("keywords").split(",")
+        print(keywords)
         video_idx = []
         user = request.user
         # if user is None or isinstance(user, AnonymousUser):
         #     user = User()
         #     user.username = "Guest_{}".format(time())
         #     user.save()
-        topic_id = request.POST.get("topic")
+        topic_id = int(request.POST.get("topic"))
         freebaseid = request.POST.get("freebaseid")
         topics = Topic.objects.filter(id=topic_id)
         topic = topics[0]
@@ -120,10 +122,10 @@ class KeywordSearchView(View):
                                           hd=hd, cc=cc, duration=duration)
             if record is None:
                 video_idx = list(set(video_idx))
-                context = {"video_idx": video_idx, "num_results": len(video_idx),
+                context = {"num_results": len(video_idx),
                            "keywords": request.POST.get("keywords"),
                            "error": "Cannot obtain your record after {} results!".format(len(video_idx))}
-                return render(request, template_name=self.template_name, context=context)
+                return JsonResponse(context)
             results = record.content
             for result in results:
                 if not "id" in result or not "videoId" in result["id"]:
@@ -131,8 +133,8 @@ class KeywordSearchView(View):
                 video_idx.append(result["id"]["videoId"])
         video_idx = list(set(video_idx))
 
-        context = {"video_idx": video_idx, "num_results": len(video_idx),
-                   "keywords": request.POST.get("keywords"), "error": None}
-        # logging.info(request.POST.getlist("pref[]"))
+        context = {"num_results": len(video_idx),
+                   "keywords": request.POST.get("keywords"),
+                   "error": None}
         logging.info(len(video_idx))
-        return render(request, template_name=self.template_name, context=context)
+        return JsonResponse(context)
