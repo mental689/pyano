@@ -38,3 +38,12 @@ if 'survey' in settings.INSTALLED_APPS:
         url(r'^survey/', include('survey.urls'))
     ]
 
+if 'newsletter' in settings.INSTALLED_APPS:
+    urlpatterns += [
+        url(r'^newsletter/', include('newsletter.urls'))
+    ]
+
+if 'tinymce' in settings.INSTALLED_APPS:
+    urlpatterns += [
+        url(r'^tinymce/', include('tinymce.urls'))
+    ]

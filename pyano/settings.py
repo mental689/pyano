@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     'bootstrapform',
 	'survey',
     'analytical',
-    'social_django'
+    'social_django',
+    'sorl.thumbnail',
+    'newsletter',
+    'tinymce'
 ]
 
 MIDDLEWARE = [
@@ -181,6 +184,17 @@ SOCIAL_AUTH_FACEBOOK_KEY = ''
 SOCIAL_AUTH_FACEBOOK_SECRET = ''
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+
+NEWSLETTER_CONFIRM_EMAIL = False
+NEWSLETTER_RICHTEXT_WIDGET = "tinymce.widgets.TinyMCE"
+# Amount of seconds to wait between each email. Here 100ms is used.
+NEWSLETTER_EMAIL_DELAY = 0.1
+
+# Amount of seconds to wait between each batch. Here one minute is used.
+NEWSLETTER_BATCH_DELAY = 60
+
+# Number of emails in one batch
+NEWSLETTER_BATCH_SIZE = 100
 
 SOCIAL_AUTH_GITHUB_KEY = '05ee6fa7511a1c4ab25a'
 SOCIAL_AUTH_GITHUB_SECRET = 'f31c9e8d95a6761e686718d814eca75b28e9bb40'

@@ -12,3 +12,5 @@ Pillow
 Cython==0.29.1
 social-auth-app-django
 git+https://github.com/idlesign/django-sitemessage
+django-newsletter # automatically sending call-for-contribution to workers when there are jobs available and need workers.
+django-tinymce
