@@ -26,10 +26,10 @@
                         </select>
                     </div>
                     <div class="mt-10">
-                        <input type="button" value="Search for relevant videos" onclick="search_relevant();"
+                        <input type="button" value="Update" onclick="search_relevant();"
                                class="genric-btn default radius">
-                        <input type="button" value="Add relevant videos to DB" onclick="add_relevant();"
-                               class="genric-btn default radius">
+                        <!--<input type="button" value="Add relevant videos to DB" onclick="add_relevant();"-->
+                               <!--class="genric-btn default radius">-->
                     </div>
                 </form>
             </div>
@@ -56,9 +56,10 @@
     $('#videos').change(function () {
         $('#youtube_canvas').html(
             '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + $('#videos option:selected').text() + '" frameborder="0"\n' +
-            '                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"\n' +
+            '                    allow="autoplay; encrypted-media"\n' +
             '                    allowfullscreen></iframe>'
         );
+        search_relevant();
     });
 
     function search_relevant() {
@@ -88,16 +89,18 @@
             } else {
                 console.log("Related videos of video " + vid + " was successfully searched.");
             }
+            $('#relevant_videos').empty();
+            var html = '';
+            for (var i = 0; i < data.results.length; ++i) {
+                var v = data.results[i];
+                html += ('<iframe width="280" height="157" src="https://www.youtube.com/embed/' + v.id.videoId + '" frameborder="0"' +
+                    '                    allow="autoplay; encrypted-media"' +
+                    '                    allowfullscreen></iframe>');
+            }
+            $('#relevant_videos').html(html);
         }).fail(function (data) {
             alert("There are some errors in server side: " + data);
         }).always(function (data) {
-            $('#relevant_videos').html();
-            for (var i = 0; i < data.results.length; ++i) {
-                var v = data.results[i];
-                $('#relevant_videos').append('<iframe width="560" height="315" src="https://www.youtube.com/embed/' + v.id.videoID + '" frameborder="0"' +
-                    '                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"' +
-                    '                    allowfullscreen></iframe></br>')
-            }
             $("body").removeClass('loading');
         });
     }
