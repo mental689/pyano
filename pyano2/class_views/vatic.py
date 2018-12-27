@@ -24,15 +24,15 @@ class VATICIndexView(View):
         id = request.GET.get('id')
         if not id:
             logging.debug('No id is provided. Just go to the index page.')
-        else:
-            wjobs = request.user.worker2jobs.all()
-            assigned = False
-            for wjob in wjobs:
-                if wjob.job.id == int(id):
-                    assigned = True
-            if not assigned and not request.user.is_staff:
-                logging.debug('This user is not assigned to this job and this user is not admin. Just go to the index page.')
-                return redirect(to="/vatic/list")
+        # else:
+        #     wjobs = request.user.worker2jobs.all()
+        #     assigned = False
+        #     for wjob in wjobs:
+        #         if wjob.job.id == int(id):
+        #             assigned = True
+        #     if not assigned and not request.user.is_staff:
+        #         logging.debug('This user is not assigned to this job and this user is not admin. Just go to the index page.')
+        #         return redirect(to="/vatic/list")
         return render(request, template_name=self.template_name, context=context)
 
 
