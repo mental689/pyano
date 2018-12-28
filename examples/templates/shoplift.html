@@ -115,11 +115,11 @@
             return
         }
         var posting = $.post(
-            'http://13.58.121.50:8000/vatic/crawler/',
+            '/vatic/crawler/',
             {
                 'vid': vid,
                 'id': id,
-                'gid': $('#gid').val(),
+                'gid': 1,
                 'csrfmiddlewaretoken': $.cookie("csrftoken"),
                 'labels': $('#labels').val()
             }
