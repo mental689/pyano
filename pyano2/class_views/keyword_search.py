@@ -60,11 +60,11 @@ class KeywordSearchView(View):
                 blocks = BlockedChannel.objects.filter(channelId=v.channelId) # videos from blocked channels won't be added in to our database again.
                 if blocks.count() > 0:
                     continue
-                v.cat = VideoCategory.objects.filter(id=1)[0]
                 v.type = 0
                 v.start = 0
                 v.end = 0
                 try:
+                    v.cat = VideoCategory.objects.filter(id=topic.videoCategory.id)[0]
                     v.save()
                 except Exception as e:
                     logging.error(e)
@@ -95,7 +95,8 @@ class KeywordSearchView(View):
             if not found:
                 try:
                     f = FreebaseTopic()
-                    f.gid = freebaseid
+                    f.googleId = freebaseid
+                    f.save()
                     f.pyanoTopic.add(topic)
                     f.save()
                 except Exception as e:

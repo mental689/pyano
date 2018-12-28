@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now, timedelta
 from django.utils.translation import ugettext_lazy as _
-from survey.models import Survey, Video
+from survey.models import Survey, Video, VideoCategory
 from vision.track.interpolation import LinearFill
 
 from pyano2.vatic.qa import tolerable
@@ -15,6 +15,7 @@ from pyano2.downloader.youtube import *
 # For keyword search
 class Topic(models.Model): # topics will be added by admins
     name = models.CharField(max_length=255, default="Shoplifting")
+    videoCategory = models.ForeignKey(VideoCategory, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(auto_created=True, default=now, blank=False, null=False)
     updated = models.DateTimeField(auto_now=True)
 
@@ -72,9 +73,13 @@ class Invitation(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def is_expired(self):
-        if now() - self.created > timedelta(+7) or self.status == 3:
-            self.status = 3
-            self.save()
+        if now() - self.created > timedelta(+7):
+            try:
+                self.status = 3
+                self.save()
+            except:
+                pass
+        if self.status == 3:
             return True
         return False
 
