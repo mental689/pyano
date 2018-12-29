@@ -494,8 +494,10 @@ class VATICAssignWorker(View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(to="/")
-        jobs = VATICJob.objects.filter(completed=False).all()
         uid = request.POST.get('uid', None)
+        start_jid = request.POST.get('sid', 0)
+        end_jid = request.POST.get('eid', 100)
+        jobs = VATICJob.objects.filter(completed=False, id__lte=start_jid, id__gte=end_jid).all()
         print(uid)
         if uid is not None:
             users = User.objects.filter(id=uid)
