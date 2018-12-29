@@ -493,9 +493,10 @@ class VATICAssignWorker(View):
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return JsonResponse({'status': 404, 'error': 'No user'})
+            return redirect(to="/")
         jobs = VATICJob.objects.filter(completed=False).all()
         uid = request.POST.get('uid', None)
+        print(uid)
         if uid is not None:
             users = User.objects.filter(id=uid)
             if users.count() > 0:
@@ -508,6 +509,6 @@ class VATICAssignWorker(View):
                 user.email_user(subject='You have job offers!',
                                 message="Admins have assigned some important jobs to you. Congratulation! "
                                         "You can login and visit http://13.58.121.50:8000/vatic/list/ to see the list of jobs you have been offered. ")
-        return render(request, template_name=self.template_name, context={'jobs': jobs})
+        return redirect(to="/")
 
 
