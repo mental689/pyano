@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.core.mail import send_mail
 from django.db.models import Count
+from django.db.models import Q
 
 from pyano2.models import *
 from pyano2.downloader.youtube import download_youtube_video
@@ -476,5 +477,37 @@ class VideoAnswerView(View):
         except Exception as e:
             return JsonResponse({'status': 404, 'error': e})
         return JsonResponse({'status': 200, 'answers': answers})
+
+
+class VATICAssignWorker(View):
+    template_name = 'vatic/assignment.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(to="{}?next=/vatic/list".format(settings.LOGIN_URL))
+        if not request.user.is_staff:
+            return redirect(to="/")
+        jobs = VATICJob.objects.filter(completed=False).all()
+        users = User.objects.filter(~Q(email=''))
+        return render(request, template_name=self.template_name, context={'jobs': jobs, 'users': users})
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'status': 404, 'error': 'No user'})
+        jobs = VATICJob.objects.filter(completed=False).all()
+        uid = request.POST.get('uid', None)
+        if uid is not None:
+            users = User.objects.filter(id=uid)
+            if users.count() > 0:
+                user = users[0]
+                for job in jobs:
+                    assign = VATICWorkerJob()
+                    assign.worker = user
+                    assign.job = job
+                    assign.save()
+                user.email_user(subject='You have job offers!',
+                                message="Admins have assigned some important jobs to you. Congratulation! "
+                                        "You can login and visit http://13.58.121.50:8000/vatic/list/ to see the list of jobs you have been offered. ")
+        return render(request, template_name=self.template_name, context={'jobs': jobs})
 
 
