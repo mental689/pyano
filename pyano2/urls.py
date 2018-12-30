@@ -6,7 +6,7 @@ from pyano2.class_views.index import IndexView
 from pyano2.class_views.invitation import InvitationView, AcceptInvitationView, DeclineInvitationView, AlternativeRecommendationView
 from pyano2.class_views.vatic import VATICIndexView, VATICJobView, VATICBoxesForJobView, \
     VATICValidateJobView, VATICSaveJobView, VATICListView, VATICBidJobView, VATICListJobApplicationView, \
-    VATICApproveBidView, VATICFinalizeJobView, VATICCrawlerView, VideoAnswerView, VATICAssignWorker
+    VATICApproveBidView, VATICFinalizeJobView, VATICCrawlerView, VideoAnswerView, VATICAssignWorker, VATICAssignmentView
 from pyano2.class_views.qbe_search import QBEVideoSearchView
 from pyano2.class_views.lock_channel import LockChannelView
 
@@ -32,6 +32,7 @@ urlpatterns = [
     path('vatic/finalize/', VATICFinalizeJobView.as_view(), name='vatic_finalize'),
     path('vatic/crawler/', VATICCrawlerView.as_view(), name='vatic_crawler'),
     path('vatic/assign/', VATICAssignWorker.as_view(), name='vatic_assign'),
+    path('vatic/assignment/', VATICAssignmentView.as_view(), name='vatic_assignment_list'),
     path('video/answer/<int:vid>/', VideoAnswerView.as_view(), name='video_answer'),
     path('channel/block/', LockChannelView.as_view(), name='lock_channel')
 ]
