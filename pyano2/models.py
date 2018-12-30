@@ -365,8 +365,11 @@ class VATICTrainingOf(models.Model):
 class VATICWorkerJob(models.Model):
     worker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='worker2jobs')
     job = models.ForeignKey(VATICJob, on_delete=models.CASCADE, related_name='job2workers')
+    uuid = models.CharField(max_length=255, null=True, unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        unique_together = ('worker', 'job')
 
 
 class VATICBid(models.Model):

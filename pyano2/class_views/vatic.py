@@ -12,6 +12,7 @@ from pyano2.downloader.video import *
 from pyano import settings as pyano_settings
 import json
 from glob import glob
+import uuid
 
 
 class VATICIndexView(View):
@@ -495,10 +496,10 @@ class VATICAssignWorker(View):
         if not request.user.is_authenticated:
             return redirect(to="/")
         uid = request.POST.get('uid', None)
-        start_jid = request.POST.get('sid', 0)
-        end_jid = request.POST.get('eid', 100)
-        jobs = VATICJob.objects.filter(completed=False, id__lte=start_jid, id__gte=end_jid).all()
-        print(uid)
+        start_jid = int(request.POST.get('sid', 0))
+        end_jid = int(request.POST.get('eid', 100))
+        jobs = VATICJob.objects.filter(completed=False, id__gte=start_jid, id__lte=end_jid).all()
+        aid = uuid.uuid4()
         if uid is not None:
             users = User.objects.filter(id=uid)
             if users.count() > 0:
@@ -507,10 +508,25 @@ class VATICAssignWorker(View):
                     assign = VATICWorkerJob()
                     assign.worker = user
                     assign.job = job
+                    assign.uuid = aid
                     assign.save()
                 user.email_user(subject='You have job offers!',
                                 message="Admins have assigned some important jobs to you. Congratulation! "
-                                        "You can login and visit http://13.58.121.50:8000/vatic/list/ to see the list of jobs you have been offered. ")
+                                        "You can login and visit http://13.58.121.50:8000/vatic/assignment/?uuid={} "
+                                        "to see the list of jobs you have been offered. ".format(aid))
         return redirect(to="/")
 
 
+class VATICAssignmentView(View):
+    template_name = 'vatic/list.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(to="{}?next=/vatic/assignment/?uuid={}".format(settings.LOGIN_URL, request.GET.get('uuid')))
+        uuid = request.GET.get('uuid')
+        if uuid is None:
+            jobs = []
+        else:
+            assignments = VATICWorkerJob.objects.filter(worker=request.user, uuid=request.GET.get('uuid'))
+            jobs = [a.job for a in assignments]
+        return render(request, template_name=self.template_name, context={'jobs': jobs})
