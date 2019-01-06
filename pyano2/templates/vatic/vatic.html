@@ -47,7 +47,7 @@
     <table>
         <thead>
         <tr>
-            <th>Name</th>
+            <th>ID</th>
             <th>Score</th>
             <th>Comments</th>
         </tr>
@@ -55,7 +55,7 @@
         <tbody>
             {% for comment in comments %}
             <tr>
-                <td>{{comment.user.get_full_name}}</td>
+                <td>{{comment.id}}</td>
                 <td>{{comment.score}}</td>
                 <td>{{comment.comment}}</td>
             </tr>
