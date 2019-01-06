@@ -34,6 +34,7 @@
     {% csrf_token %}
 </div>
 
+<<<<<<< HEAD
 {% get_comment_count for job as comment_count %}
     <div class="py-4 text-center">
         {{ comment_count }} comment{{ comment_count|pluralize }}
@@ -83,5 +84,15 @@
     <!--</table>-->
     <!--{%endif%}-->
 <!--</div>-->
+<div id="peer_comments">
+    {% if user.is_staff %}
+    You are in review mode!
+    <form method="post" action="/vatic/comment/">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="submit" value="Submit META comment">
+    </form>
+</div>
 </body>
 </html>
