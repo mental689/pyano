@@ -22,7 +22,7 @@
             <th><a href="/vatic?id={{job.id}}" target="_blank">
                 /vatic?id={{job.id}}</a></th>
             <th>{{job.group.cost.point}}</th>
-<th>{{job.job2workers|length}}</th><th>{{job.bids|length}}</th>
+<th>{{job.job2workers.all|length}}</th><th>{{job.bids.all|length}}</th>
             {% if not user.is_staff %}<th><a href="/vatic/bid?id={{job.id}}" target="_blank">Bid this job</a> </th>{% endif %}
             {% if user.is_staff %}<th><a href="/vatic/finalize?id={{job.id}}">Finalize</a></th> {%endif%}
         </tr>

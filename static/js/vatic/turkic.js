@@ -460,6 +460,7 @@ function server_post(action, parameters, data, callback)
         data: data,
         success: function(data) {
             callback(data);
+console.log(data);
         },
         error: function(xhr, textstatus) {
             console.log(xhr.responseText);

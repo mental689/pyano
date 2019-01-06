@@ -543,10 +543,11 @@ function ui_submit(job, tracks)
     else
     {
         note.html("Saving...");
-        savejob(function() {
+        savejob(function(data) {
 //            mturk_submit(function(redirect) {
                 note.html("Saved!");
                 finishsubmit('');
+console.log(data);
 //            });
         });
     }

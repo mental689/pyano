@@ -156,7 +156,9 @@ class VATICSaveJobView(View):  # savejob
                 continue
 
             for attributeid, timeline in attributes.items():
-                attribute = VATICAttribute.objects.filter(id=attributeid)
+                attributes = VATICAttribute.objects.filter(id=attributeid)
+                if len(attributes) == 0: continue
+                else: attribute = attributes[0]
                 for frame, value in timeline.items():
                     aa = AttributeAnnotation()
                     aa.attribute = attribute
@@ -509,7 +511,10 @@ class VATICAssignWorker(View):
                     assign.worker = user
                     assign.job = job
                     assign.uuid = aid
-                    assign.save()
+                    try:
+                        assign.save()
+                    except:
+                        continue
                 user.email_user(subject='You have job offers!',
                                 message="Admins have assigned some important jobs to you. Congratulation! "
                                         "You can login and visit http://13.58.121.50:8000/vatic/assignment/?uuid={} "
