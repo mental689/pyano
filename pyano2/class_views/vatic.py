@@ -32,9 +32,10 @@ class VATICIndexView(View):
             return redirect(to='/')
         form = ReviewForm()
         context['form'] = form
+        context['job'] = job
         context['id'] = id
         reviews = Comment.objects.filter(job=job).all()
-        context['comments'] = reviews
+#        context['comments'] = reviews
         # else:
         #     wjobs = request.user.worker2jobs.all()
         #     assigned = False

@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load comments %}
 
 <!DOCTYPE html5>
 <html>
@@ -33,36 +34,54 @@
     {% csrf_token %}
 </div>
 
-<div id="peer_comments">
-    {% if user.is_staff %}
-    You are in review mode!
-    <form method="post" action="/vatic/comment/">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="hidden" name="id" value="{{id}}">
-        <input type="submit" value="Submit comment">
-    </form>
-    {% else %}
-    This work obtained {{comments|length}} reviews.
-    <table>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Score</th>
-            <th>Comments</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for comment in comments %}
-            <tr>
-                <td>{{comment.user.get_full_name}}</td>
-                <td>{{comment.score}}</td>
-                <td>{{comment.comment}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {%endif%}
-</div>
+{% get_comment_count for job as comment_count %}
+    <div class="py-4 text-center">
+        {{ comment_count }} comment{{ comment_count|pluralize }}
+        ha{{ comment_count|pluralize:"s,ve" }} been posted.
+    </div>
+    {% if comment_count %}
+        <hr/>
+        <div class="comments">
+            {% render_comment_list for job %}
+        </div>
+    {% endif %}
+<div class="card card-block mb-5">
+            <div class="card-body">
+                <h4 class="card-title text-center pb-3">Post your comment</h4>
+                {% render_comment_form for job %}
+            </div>
+        </div>
+
+<!--<div id="peer_comments">-->
+    <!--{% if user.is_staff %}-->
+    <!--You are in review mode!-->
+    <!--<form method="post" action="/vatic/comment/">-->
+        <!--{% csrf_token %}-->
+        <!--{{form.as_p}}-->
+        <!--<input type="hidden" name="id" value="{{id}}">-->
+        <!--<input type="submit" value="Submit comment">-->
+    <!--</form>-->
+    <!--{% else %}-->
+    <!--This work obtained {{comments|length}} reviews.-->
+    <!--<table>-->
+        <!--<thead>-->
+        <!--<tr>-->
+            <!--<th>ID</th>-->
+            <!--<th>Score</th>-->
+            <!--<th>Comments</th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+            <!--{% for comment in comments %}-->
+            <!--<tr>-->
+                <!--<td>{{comment.id}}</td>-->
+                <!--<td>{{comment.score}}</td>-->
+                <!--<td>{{comment.comment}}</td>-->
+            <!--</tr>-->
+            <!--{% endfor %}-->
+        <!--</tbody>-->
+    <!--</table>-->
+    <!--{%endif%}-->
+<!--</div>-->
 </body>
 </html>

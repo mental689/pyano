@@ -31,6 +31,10 @@ ALLOWED_HOSTS = ['13.58.121.50', '127.0.0.1', SHOPLIFT_DOMAIN]
 
 SITE_ID = 1
 
+COMMENTS_APP = 'django_comments_xtd'
+
+COMMENTS_XTD_MAX_THREAD_LEVEL = 2
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,7 +52,9 @@ INSTALLED_APPS = [
     'social_django',
     'sorl.thumbnail',
     'newsletter',
-    'tinymce'
+    'tinymce',
+    'django_comments_xtd',
+    'django_comments'
 ]
 
 MIDDLEWARE = [
