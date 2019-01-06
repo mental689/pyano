@@ -417,5 +417,22 @@ class BlockedChannel(models.Model):
             except:
                 pass
 
+SCORES = (
+    (1, 'Strong reject'),
+    (2, 'Reject'),
+    (3, 'Weak reject'),
+    (4, 'Borderline'),
+    (5, 'Weak accept'),
+    (6, 'Accept'),
+    (7, 'Strong accept')
+)
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', help_text=_('Reviewer'))
+    score = models.IntegerField(choices=SCORES, default=4, help_text=_('Score'))
+    comment = models.TextField(help_text=_('Comments'))
+    job = models.ForeignKey(VATICJob, on_delete=models.CASCADE, related_name='reviews', help_text=_('Job'))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 

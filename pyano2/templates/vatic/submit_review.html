@@ -30,39 +30,11 @@
 <body>
 
 <div id="container">
-    {% csrf_token %}
-</div>
-
-<div id="peer_comments">
-    {% if user.is_staff %}
-    You are in review mode!
-    <form method="post" action="/vatic/comment/">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="hidden" name="id" value="{{id}}">
-        <input type="submit" value="Submit comment">
-    </form>
+    {% if not error %}
+    Your review was successfully submitted!
     {% else %}
-    This work obtained {{comments|length}} reviews.
-    <table>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Approved</th>
-            <th>Comments</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for comment in comments %}
-            <tr>
-                <td>{{comment.user.get_full_name}}</td>
-                <td>{{comment.approved}}</td>
-                <td>{{comment.body}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {%endif%}
+    {{error}}
+    {%endif%}}
 </div>
 </body>
 </html>

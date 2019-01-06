@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from pyano2.models import Invitation, Survey
+from pyano2.models import Comment
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -44,3 +45,9 @@ class SearchForm(forms.Form):
     hd = forms.CheckboxInput(attrs={'title': 'HD videos only.'})
     cc = forms.CheckboxInput(attrs={'title': 'CreativeCommons videos only.'})
     long_videos = forms.CheckboxInput(attrs={'title': 'Long videos only.'})
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('score', 'comment')

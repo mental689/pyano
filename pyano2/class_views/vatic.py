@@ -9,6 +9,7 @@ from django.db.models import Q
 from pyano2.models import *
 from pyano2.downloader.youtube import download_youtube_video
 from pyano2.downloader.video import *
+from pyano2.forms import ReviewForm
 from pyano import settings as pyano_settings
 import json
 from glob import glob
@@ -25,7 +26,15 @@ class VATICIndexView(View):
         context = {}
         id = request.GET.get('id')
         if not id:
-            logging.debug('No id is provided. Just go to the index page.')
+            return redirect(to='/')
+        job = VATICJob.objects.filter(id=id).first()
+        if job is None:
+            return redirect(to='/')
+        form = ReviewForm()
+        context['form'] = form
+        context['id'] = id
+        reviews = Comment.objects.filter(job=job).all()
+        context['comments'] = reviews
         # else:
         #     wjobs = request.user.worker2jobs.all()
         #     assigned = False
@@ -535,3 +544,25 @@ class VATICAssignmentView(View):
             assignments = VATICWorkerJob.objects.filter(worker=request.user, uuid=request.GET.get('uuid'))
             jobs = [a.job for a in assignments]
         return render(request, template_name=self.template_name, context={'jobs': jobs})
+
+
+class CommentView(View):
+    template_name = 'vatic/submit_review.html'
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_staff:
+            return redirect(to='/')
+        id = request.GET.get('id', None)
+        context = {}
+        if id is None:
+            context['error'] = 'Work is not found.'
+            return render(request, template_name=self.template_name, context=context)
+        job = VATICJob.objects.filter(id=id).first()
+        if job is None:
+            context['error'] = 'Job is not found.'
+            return render(request, template_name=self.template_name, context=context)
+        form = ReviewForm(request.POST)
+        form.instance.user = request.user
+        form.instance.job = job
+        form.save()
+        return render(request, template_name=self.template_name, context=context)
