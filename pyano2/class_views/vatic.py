@@ -552,7 +552,7 @@ class CommentView(View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.is_staff:
             return redirect(to='/')
-        id = request.GET.get('id', None)
+        id = request.POST.get('id', None)
         context = {}
         if id is None:
             context['error'] = 'Work is not found.'
