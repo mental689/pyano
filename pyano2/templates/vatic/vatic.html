@@ -48,7 +48,7 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Approved</th>
+            <th>Score</th>
             <th>Comments</th>
         </tr>
         </thead>
@@ -56,8 +56,8 @@
             {% for comment in comments %}
             <tr>
                 <td>{{comment.user.get_full_name}}</td>
-                <td>{{comment.approved}}</td>
-                <td>{{comment.body}}</td>
+                <td>{{comment.score}}</td>
+                <td>{{comment.comment}}</td>
             </tr>
             {% endfor %}
         </tbody>
