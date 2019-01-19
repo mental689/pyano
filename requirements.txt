@@ -1,4 +1,4 @@
-Django==2.1.2
+django>=2.1.5
 glog==0.3.1
 google-api-python-client
 oauth2client==3.0.0
@@ -14,3 +14,4 @@ social-auth-app-django
 git+https://github.com/idlesign/django-sitemessage
 django-newsletter # automatically sending call-for-contribution to workers when there are jobs available and need workers.
 django-tinymce
+django-comments-xtd
