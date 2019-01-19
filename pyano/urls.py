@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^examples/shoplift/', ShopliftSummaryView.as_view(), name='shoplift_example'),
     url(r'^examples/qbe/', QBESearchView.as_view(), name='qbe_example'),
     url(r'^', include('pyano2.urls')),
+    url(r'^comments/', include('django_comments_xtd.urls')),
 ]
 
 if 'survey' in settings.INSTALLED_APPS:

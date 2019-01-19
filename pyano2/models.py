@@ -217,6 +217,9 @@ class VATICJob(models.Model):
     def getpage(self):
         return "?id={0}".format(self.id)
 
+    def get_absolute_url(self):
+        return "/vatic{}".format(self.getpage())
+
     def markastraining(self):
         """
         Marks this job as the result of a training run. This will automatically
